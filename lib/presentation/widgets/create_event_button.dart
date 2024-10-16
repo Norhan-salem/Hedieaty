@@ -3,10 +3,12 @@ import '../../core/utils/color_palette.dart';
 
 class CreateEventButton extends StatelessWidget {
   final String buttonText;
+  final VoidCallback onPressed;
 
   const CreateEventButton({
     Key? key,
     required this.buttonText,
+    required this.onPressed,
   }) : super(key: key);
 
   @override
@@ -33,12 +35,9 @@ class CreateEventButton extends StatelessWidget {
             ),
           ),
         ),
-        onPressed: () {
-          // To-Do Navigate to create event/list screen
-        },
+        onPressed: onPressed,
         child: Text(buttonText),
       ),
     );
   }
 }
-

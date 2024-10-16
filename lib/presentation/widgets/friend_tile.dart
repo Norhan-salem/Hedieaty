@@ -6,7 +6,10 @@ class Friend {
   final String profilePic;
   final int upcomingEvents;
 
-  Friend({required this.name, required this.profilePic, required this.upcomingEvents});
+  Friend(
+      {required this.name,
+      required this.profilePic,
+      required this.upcomingEvents});
 }
 
 class FriendTile extends StatelessWidget {
@@ -59,12 +62,16 @@ class FriendTile extends StatelessWidget {
                 ? 'Upcoming Events: ${friend.upcomingEvents}'
                 : 'No Upcoming Events',
             style: TextStyle(
-              color: friend.upcomingEvents > 0 ? ColorPalette.lightPinkishRed : Colors.grey,
+              color: friend.upcomingEvents > 0
+                  ? ColorPalette.lightPinkishRed
+                  : Colors.grey,
               fontSize: screenWidth * 0.033,
               fontFamily: 'Poppins',
             ),
           ),
-          trailing: friend.upcomingEvents > 0 ? _buildEventIndicator(screenWidth) : null,
+          trailing: friend.upcomingEvents > 0
+              ? _buildEventIndicator(screenWidth)
+              : null,
           onTap: () {
             // To-Do: Navigate to friend's gift list screen
           },

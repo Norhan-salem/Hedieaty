@@ -7,8 +7,14 @@ class FriendList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final friends = [
-      Friend(name: 'Friend1', profilePic: 'assets/images/profile_mock.png', upcomingEvents: 1),
-      Friend(name: 'Friend2', profilePic: 'assets/images/profile_mock.png', upcomingEvents: 0)
+      Friend(
+          name: 'Friend1',
+          profilePic: 'assets/images/profile_mock.png',
+          upcomingEvents: 1),
+      Friend(
+          name: 'Friend2',
+          profilePic: 'assets/images/profile_mock.png',
+          upcomingEvents: 0)
     ];
 
     return ListView.builder(

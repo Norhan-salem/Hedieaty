@@ -2,14 +2,23 @@ import 'package:flutter/material.dart';
 import '../../core/utils/color_palette.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBar({Key? key}) : super(key: key);
+  final String title;
+  final IconData? actionIcon;
+  final VoidCallback? onActionPressed;
+
+  const CustomAppBar({
+    Key? key,
+    required this.title,
+    this.actionIcon,
+    this.onActionPressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    double appBarHeight = screenHeight * 0.8;
+    double appBarHeight = screenHeight * 0.08;
     double fontSize = screenWidth * 0.07;
     double iconSize = screenWidth * 0.08;
 
@@ -22,22 +31,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       child: AppBar(
         title: Text(
-          'Friends',
+          title,
           style: TextStyle(
             fontSize: fontSize,
             fontWeight: FontWeight.bold,
           ),
         ),
         actions: [
-          IconButton(
-            icon: Icon(
-              Icons.search,
-              size: iconSize,
+          if (actionIcon != null && onActionPressed != null)
+            IconButton(
+              icon: Icon(
+                actionIcon,
+                size: iconSize,
+              ),
+              onPressed: onActionPressed,
             ),
-            onPressed: () {
-              // To-Do implement search functionality
-            },
-          ),
         ],
         toolbarHeight: appBarHeight,
         backgroundColor: Colors.transparent,
