@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/background_image_container.dart';
-import '../widgets/add_friend_button.dart';
+import '../components/add_friend_button.dart';
 import '../widgets/create_event_button.dart';
-import '../widgets/friend_list.dart';
+import '../components/friend_list.dart';
 import '../widgets/custom_app_bar.dart';
 import 'events_list_screen.dart';
 

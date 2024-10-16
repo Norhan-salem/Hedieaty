@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/background_image_container.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/create_event_button.dart';
 import '../widgets/custom_app_bar.dart';
-import '../widgets/event_list.dart';
+import '../components/event_list.dart';
 
 class EventsListScreen extends StatelessWidget {
   const EventsListScreen({Key? key}) : super(key: key);

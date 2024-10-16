@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/background_image_container.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/create_event_button.dart';
-import '../widgets/gift_list.dart';
+import '../components/gift_list.dart';
 
 class GiftsListScreen extends StatelessWidget {
   const GiftsListScreen({Key? key}) : super(key: key);
