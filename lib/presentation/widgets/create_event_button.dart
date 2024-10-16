@@ -22,7 +22,7 @@ class CreateEventButton extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           textStyle: TextStyle(
-            fontSize: screenWidth * 0.05,
+            fontSize: screenWidth * 0.048,
             fontFamily: 'Poppins',
             color: ColorPalette.eggShell,
           ),

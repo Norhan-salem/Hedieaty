@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hedieaty_flutter_application/presentation/widgets/background_image_container.dart';
 import '../widgets/add_friend_button.dart';
 import '../widgets/create_event_button.dart';
 import '../widgets/friend_list.dart';
@@ -10,6 +11,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     double appBarPadding = screenHeight * 0.02;
 
@@ -18,24 +20,31 @@ class HomeScreen extends StatelessWidget {
         title: 'Friends',
         actionIcon: Icons.search,
         onActionPressed: () {
-          //To-Do implement search functionality
+          // To-Do: implement search functionality
         },
       ),
-      body: Column(
+      body: Stack(
         children: [
-          SizedBox(height: appBarPadding),
-          CreateEventButton(
-            buttonText: 'Create Your Own Event',
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => EventListPage()),
-              );
-            },
-          ),
-          SizedBox(height: appBarPadding),
-          Expanded(
-            child: FriendList(),
+          BackgroundContainer(
+            child: Column(
+              children: [
+                SizedBox(height: appBarPadding),
+                CreateEventButton(
+                  buttonText: 'Create Your Own Event',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => EventsListScreen()),
+                    );
+                  },
+                ),
+                SizedBox(height: appBarPadding),
+                Expanded(
+                  child: FriendList(),
+                ),
+              ],
+            ),
           ),
         ],
       ),
