@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hedieaty_flutter_application/presentation/screens/gifts_list_screen.dart';
 import '../../data/models/event_model.dart';
 import 'event_tile.dart';
 
@@ -27,9 +28,21 @@ class _EventListState extends State<EventList> {
     return ListView.builder(
       itemCount: events.length,
       itemBuilder: (context, index) {
+        final event = events[index];
         return EventTile(
-          event: events[index],
-          onDelete: () => _deleteEvent(index),
+          event: event,
+          onDelete: () {
+            // Implement delete functionality
+          },
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                // will handle fetching the the gift list by event id later
+                builder: (context) => GiftsListScreen(),
+              ),
+            );
+          },
         );
       },
     );

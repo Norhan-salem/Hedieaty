@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hedieaty_flutter_application/core/utils/tile_decoration.dart';
 import '../../core/utils/color_palette.dart';
 
 class Friend {
@@ -28,17 +29,7 @@ class FriendTile extends StatelessWidget {
         vertical: screenHeight * 0.01,
       ),
       child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: ColorPalette.darkTeal, width: 2),
-          borderRadius: BorderRadius.circular(10),
-          color: ColorPalette.eggShell,
-          boxShadow: [
-            BoxShadow(
-              color: ColorPalette.darkTeal,
-              offset: Offset(3, 3),
-            ),
-          ],
-        ),
+        decoration: TileDecoration.tileBorder(),
         child: ListTile(
           contentPadding: EdgeInsets.symmetric(
             horizontal: screenWidth * 0.04,
