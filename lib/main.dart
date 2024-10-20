@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:hedieaty_flutter_application/presentation/screens/home_screen.dart';
-import 'core/utils/color_palette.dart';
+import 'package:hedieaty_flutter_application/presentation/screens/signup_screen.dart';
+import 'core/constants/color_palette.dart';
 //import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 void main() {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  //WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   //FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(MyApp());
   //FlutterNativeSplash.remove();
@@ -15,17 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Hedieaty',
-      theme: ThemeData(
-        // Primary color scheme
-        colorScheme: ColorScheme.fromSwatch().copyWith(
-          primary: ColorPalette.eggShell,
-          secondary: ColorPalette.darkCyan,
-          surface: ColorPalette.eggShell,
-        ),
-
-        //scaffoldBackgroundColor: ColorPalette.eggShell,
-
-        // App bar styling
+       theme: ThemeData(
         appBarTheme: AppBarTheme(
           backgroundColor: ColorPalette.lightYellow,
           foregroundColor: ColorPalette.darkTeal,
@@ -83,7 +73,7 @@ class MyApp extends StatelessWidget {
         //   ),
         // ),
       ),
-      home: HomeScreen(),
+      home: SignUpScreen(),
     );
   }
 }

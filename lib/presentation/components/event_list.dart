@@ -14,7 +14,7 @@ class _EventListState extends State<EventList> {
   List<Event> events = [
     Event(name: 'Birthday Party', category: 'Celebration', status: 'Upcoming'),
     Event(name: 'Meeting', category: 'Work', status: 'Current'),
-    Event(name: 'Concert', category: 'Entertainment', status: 'Past'),
+    Event(name: 'Concert', category: 'Entertainment', status: 'Past')
   ];
 
   void _deleteEvent(int index) {

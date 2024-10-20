@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/utils/tile_decoration.dart';
 import '../../data/models/event_model.dart';
-import '../../core/utils/color_palette.dart';
+import '../../core/constants/color_palette.dart';
 
 class EventTile extends StatelessWidget {
   final Event event;
