@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../data/models/friend_model.dart';
 import 'friend_tile.dart';
 
 class FriendList extends StatelessWidget {

@@ -24,7 +24,6 @@ class CreateEventButton extends StatelessWidget {
           textStyle: TextStyle(
             fontSize: screenWidth * 0.048,
             fontFamily: 'Poppins',
-            color: ColorPalette.eggShell,
           ),
           backgroundColor: ColorPalette.darkCyan,
           shape: RoundedRectangleBorder(
@@ -36,7 +35,7 @@ class CreateEventButton extends StatelessWidget {
           ),
         ),
         onPressed: onPressed,
-        child: Text(buttonText),
+        child: Text(buttonText, style: TextStyle(color: ColorPalette.eggShell),),
       ),
     );
   }

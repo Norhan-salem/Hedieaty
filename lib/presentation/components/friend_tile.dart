@@ -1,17 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hedieaty_flutter_application/core/utils/tile_decoration.dart';
+import 'package:hedieaty_flutter_application/presentation/screens/friend_events_list_screen.dart';
 import '../../core/constants/color_palette.dart';
-
-class Friend {
-  final String name;
-  final String profilePic;
-  final int upcomingEvents;
-
-  Friend(
-      {required this.name,
-      required this.profilePic,
-      required this.upcomingEvents});
-}
+import '../../data/models/friend_model.dart';
 
 class FriendTile extends StatelessWidget {
   final Friend friend;
@@ -65,6 +56,13 @@ class FriendTile extends StatelessWidget {
               : null,
           onTap: () {
             // To-Do: Navigate to friend's gift list screen
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                // will handle fetching the the gift list by event id later
+                builder: (context) => FriendEventsListScreen(friendName: friend.name),
+                ),
+            );
           },
         ),
       ),

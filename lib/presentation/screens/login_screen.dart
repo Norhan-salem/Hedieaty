@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hedieaty_flutter_application/presentation/screens/home_screen.dart';
 import 'package:hedieaty_flutter_application/presentation/screens/signup_screen.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/registration_button.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/title_label.dart';
 import '../../core/constants/color_palette.dart';
-import '../state/registration_state.dart';
 import '../widgets/input_text_field.dart';
 
 
@@ -74,7 +72,7 @@ class _SignUpScreenState extends State<LoginScreen> {
                           builder: (context) => SignUpScreen()),
                     );
                   },
-                  child: Text('Not registered yet? Sign Up', style: TextStyle(color: ColorPalette.darkTeal, fontFamily: 'Poppins'),),
+                  child: Text('Not registered yet? Sign Up', style: TextStyle(color: ColorPalette.darkCyan, fontFamily: 'Poppins'),),
                 ),
               ],
             ),

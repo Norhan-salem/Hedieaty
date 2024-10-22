@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/registration_button.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/title_label.dart';
 import '../../core/constants/color_palette.dart';
@@ -50,6 +51,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
             builder: (context) => HomeScreen()),
       );
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(seconds: 2), () {
+      FlutterNativeSplash.remove();
+    });
   }
 
   @override

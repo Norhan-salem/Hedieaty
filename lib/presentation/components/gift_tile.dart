@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hedieaty_flutter_application/core/utils/tile_decoration.dart';
 import '../../core/constants/color_palette.dart';
-import 'gift_list.dart';
+import '../../data/models/gift_model.dart';
 
 class GiftTile extends StatelessWidget {
   final Gift gift;

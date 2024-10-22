@@ -33,6 +33,7 @@ class _EventListState extends State<EventList> {
           event: event,
           onDelete: () {
             // Implement delete functionality
+            _deleteEvent(index);
           },
           onTap: () {
             Navigator.push(

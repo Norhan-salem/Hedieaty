@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
+import '../../data/models/gift_model.dart';
 import 'gift_tile.dart';
 
-class Gift {
-  final String name;
-  final String category;
-  final String status; // e.g., "available", "pledged"
-
-  Gift({required this.name, required this.category, required this.status});
-}
-
 class GiftList extends StatelessWidget {
+
   final List<Gift> gifts = [
     Gift(name: 'Smartphone', category: 'Electronics', status: 'available'),
     Gift(name: 'Book', category: 'Education', status: 'pledged'),
@@ -29,6 +23,7 @@ class GiftList extends StatelessWidget {
           },
           onDelete: () {
             // Implement delete functionality here
+
           },
         );
       },
