@@ -16,7 +16,7 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Friends',
+        title: 'My Friends',
         actionIcon: Icons.search,
         onActionPressed: () {
           // To-Do: implement search functionality

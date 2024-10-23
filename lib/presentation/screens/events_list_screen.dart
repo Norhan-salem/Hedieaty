@@ -15,7 +15,7 @@ class EventsListScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Events',
+        title: 'My Events',
         actionIcon: Icons.sort,
         onActionPressed: () {
           // To-Do: display mini menu of sorting options

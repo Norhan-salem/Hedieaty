@@ -13,7 +13,7 @@ class GiftsListScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Gifts',
+        title: 'My Gifts',
         actionIcon: Icons.sort,
         onActionPressed: () {
           // To-Do: display mini menu of sorting options
