@@ -30,7 +30,7 @@ class CreateEventButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             side: BorderSide(
               color: ColorPalette.darkTeal,
-              width: 2,
+              width: 3,
             ),
           ),
         ),

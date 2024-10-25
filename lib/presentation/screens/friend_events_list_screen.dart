@@ -12,9 +12,9 @@ class FriendEventsListScreen extends StatelessWidget {
       : super(key: key);
 
   List<Event> events = [
-    Event(name: 'Birthday Party', category: 'Celebration', status: 'Upcoming'),
-    Event(name: 'Meeting', category: 'Work', status: 'Current'),
-    Event(name: 'Concert', category: 'Entertainment', status: 'Past')
+    Event(name: 'Birthday Party', category: 'Celebration', status: 'Upcoming', description: '', location: '', date: DateTime. utc(1989, 11, 9)),
+    Event(name: 'Meeting', category: 'Work', status: 'Current', description: '', location: '', date: DateTime. utc(1989, 11, 9)),
+    Event(name: 'Concert', category: 'Entertainment', status: 'Past', description: '', location: '', date: DateTime. utc(1989, 11, 9))
   ];
 
   @override

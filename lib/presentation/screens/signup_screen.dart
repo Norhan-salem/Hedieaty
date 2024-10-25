@@ -4,7 +4,7 @@ import 'package:hedieaty_flutter_application/presentation/widgets/registration_b
 import 'package:hedieaty_flutter_application/presentation/widgets/title_label.dart';
 import '../../core/constants/color_palette.dart';
 import '../state/registration_state.dart';
-import '../widgets/input_text_field.dart';
+import '../widgets/credentials_input_text_field.dart';
 import 'home_screen.dart';
 import 'login_screen.dart';
 

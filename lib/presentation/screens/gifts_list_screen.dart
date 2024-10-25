@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
+import '../../core/utils/sorting_menu_utils.dart';
+import '../../data/models/gift_model.dart';
 import '../widgets/background_image_container.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/create_event_button.dart';
 import '../components/gift_list.dart';
 
 class GiftsListScreen extends StatelessWidget {
-  const GiftsListScreen({Key? key}) : super(key: key);
+  GiftsListScreen({Key? key}) : super(key: key);
+
+  final List<Gift> gifts = [
+    Gift(name: 'Smartphone', category: 'Electronics', status: 'available'),
+    Gift(name: 'Book', category: 'Education', status: 'pledged'),
+    Gift(name: 'Headphones', category: 'Electronics', status: 'available'),
+  ];
 
   @override
   Widget build(BuildContext context) {
+    ValueNotifier<List<Gift>> sortedMyGiftsNotifier =
+    ValueNotifier<List<Gift>>(gifts);
     double appBarPadding = MediaQuery.of(context).size.height * 0.02;
 
     return Scaffold(
@@ -16,7 +26,7 @@ class GiftsListScreen extends StatelessWidget {
         title: 'My Gifts',
         actionIcon: Icons.sort,
         onActionPressed: () {
-          // To-Do: display mini menu of sorting options
+          showSortingMenu(context, sortedMyGiftsNotifier);
         },
       ),
       body: BackgroundContainer(
@@ -34,7 +44,12 @@ class GiftsListScreen extends StatelessWidget {
               ),
               SizedBox(height: appBarPadding),
               Expanded(
-                child: GiftList(),
+                child: ValueListenableBuilder<List<Gift>>(
+                    valueListenable: sortedMyGiftsNotifier,
+                    builder: (context, sortedGifts, child) {
+                      return GiftList(myGifts: sortedGifts);
+                    }
+                ),
               ),
             ],
           ),

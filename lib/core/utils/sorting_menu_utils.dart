@@ -6,7 +6,7 @@ void showSortingMenu<T>(
   BuildContext context,
   ValueNotifier<List<T>> sortedItemsNotifier,
 ) {
-  List<PopupMenuEntry<String>> menuItems = [
+  List<PopupMenuEntry<String>> sortMenuOptions = [
     PopupMenuItem<String>(
       value: 'Name',
       child: Text('Sort by Name',
@@ -30,7 +30,7 @@ void showSortingMenu<T>(
   showMenu<String>(
     context: context,
     position: RelativeRect.fromLTRB(100, 100, 0, 0),
-    items: menuItems,
+    items: sortMenuOptions,
     elevation: 4,
   ).then((value) {
     if (value != null) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/color_palette.dart';
+import 'add_friend_dialog.dart';
 
 class AddFriendButton extends StatelessWidget {
   const AddFriendButton({Key? key}) : super(key: key);
@@ -63,7 +64,8 @@ class AddFriendButton extends StatelessWidget {
                 ),
               ),
               onTap: () {
-                // To-Do: Implement manual friend addition
+                Navigator.pop(context);
+                showManualFriendForm(context);
               },
             ),
             ListTile(
@@ -77,7 +79,7 @@ class AddFriendButton extends StatelessWidget {
                 ),
               ),
               onTap: () {
-                // To-Do: Implement contact list import
+                // TODO: Implement contact list import
               },
             ),
           ],

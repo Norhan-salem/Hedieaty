@@ -3,7 +3,7 @@ import 'package:hedieaty_flutter_application/presentation/screens/signup_screen.
 import 'package:hedieaty_flutter_application/presentation/widgets/registration_button.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/title_label.dart';
 import '../../core/constants/color_palette.dart';
-import '../widgets/input_text_field.dart';
+import '../widgets/credentials_input_text_field.dart';
 
 
 class LoginScreen extends StatefulWidget {
