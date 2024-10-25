@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/color_palette.dart';
-import 'add_friend_dialog.dart';
+import 'add_friend_form.dart';
 
 class AddFriendButton extends StatelessWidget {
   const AddFriendButton({Key? key}) : super(key: key);

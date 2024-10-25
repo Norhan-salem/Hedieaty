@@ -62,6 +62,10 @@ class DetailsTextField extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(color: ColorPalette.darkTeal, width: 3),
           ),
+          errorStyle: TextStyle(
+            color: ColorPalette.darkPink,
+            fontFamily: 'Poppins',
+          ),
         ),
         validator: validator ??
                 (value) => value == null || value.isEmpty ? 'Enter $labelText' : null,
