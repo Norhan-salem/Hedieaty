@@ -3,36 +3,59 @@ import 'package:hedieaty_flutter_application/presentation/widgets/background_ima
 import 'package:hedieaty_flutter_application/presentation/widgets/create_event_button.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/custom_app_bar.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/details_input_text_field.dart';
-import '../../data/models/event_model.dart';
-import '../components/date_selector.dart';
-import '../components/event_dropdown_list.dart';
 
-class AddEventScreen extends StatelessWidget {
+import '../../data/models/event_model.dart';
+import '../components/custom_dropdown_list.dart';
+import '../components/date_selector.dart';
+
+class AddEventScreen extends StatefulWidget {
   final Event? event;
 
-  AddEventScreen({Key? key, this.event}) : super(key: key);
+  const AddEventScreen({Key? key, this.event}) : super(key: key);
 
+  @override
+  _AddEventScreenState createState() => _AddEventScreenState();
+}
+
+class _AddEventScreenState extends State<AddEventScreen> {
   final _addEventFormKey = GlobalKey<FormState>();
+  late TextEditingController nameController;
+  late TextEditingController descriptionController;
+  late TextEditingController locationController;
+  late ValueNotifier<DateTime?> selectedDateNotifier;
+  String? category;
+
+  @override
+  void initState() {
+    super.initState();
+
+    nameController = TextEditingController(text: widget.event?.name ?? '');
+    descriptionController =
+        TextEditingController(text: widget.event?.description ?? '');
+    locationController =
+        TextEditingController(text: widget.event?.location ?? '');
+    selectedDateNotifier = ValueNotifier(widget.event?.date);
+    category = widget.event?.category;
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    descriptionController.dispose();
+    locationController.dispose();
+    selectedDateNotifier.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController nameController =
-    TextEditingController(text: event?.name ?? '');
-    final TextEditingController descriptionController =
-    TextEditingController(text: event?.description ?? '');
-    final TextEditingController locationController =
-    TextEditingController(text: event?.location ?? '');
-    final ValueNotifier<DateTime?> selectedDateNotifier =
-    ValueNotifier(event?.date);
-
-    String? category = event?.category;
-
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
     double padding = screenWidth * 0.04;
 
     return Scaffold(
-      appBar: CustomAppBar(title: event == null ? 'Add Event' : 'Edit Event'),
+      appBar: CustomAppBar(
+          title: widget.event == null ? 'Add Event' : 'Edit Event'),
       body: Stack(
         children: [
           BackgroundContainer(
@@ -51,7 +74,11 @@ class AddEventScreen extends StatelessWidget {
                         controller: descriptionController,
                         labelText: 'Description',
                       ),
-                      EventDropdownButton(
+                      DetailsTextField(
+                        controller: locationController,
+                        labelText: 'Location',
+                      ),
+                      CustomDropdownButton(
                         category: category,
                         items: [
                           'Celebration',
@@ -60,14 +87,12 @@ class AddEventScreen extends StatelessWidget {
                           'Other'
                         ],
                         onChanged: (value) {
-                          category = value!;
+                          setState(() {
+                            category = value;
+                          });
                         },
                         validator: (value) =>
-                        value == null ? 'Select a category' : null,
-                      ),
-                      DetailsTextField(
-                        controller: locationController,
-                        labelText: 'Location',
+                            value == null ? 'Select a category' : null,
                       ),
                       DateSelector(selectedDateNotifier: selectedDateNotifier),
                       SizedBox(height: screenHeight * 0.02),
@@ -88,7 +113,7 @@ class AddEventScreen extends StatelessWidget {
                           }
                         },
                         buttonText:
-                        event == null ? 'Add Event' : 'Save Changes',
+                            widget.event == null ? 'Add Event' : 'Save Changes',
                       ),
                     ],
                   ),
@@ -101,5 +126,3 @@ class AddEventScreen extends StatelessWidget {
     );
   }
 }
-
-

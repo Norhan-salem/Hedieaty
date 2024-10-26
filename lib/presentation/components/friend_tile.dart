@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hedieaty_flutter_application/core/utils/tile_decoration.dart';
 import 'package:hedieaty_flutter_application/presentation/screens/friend_events_list_screen.dart';
+
 import '../../core/constants/color_palette.dart';
 import '../../data/models/friend_model.dart';
 
@@ -45,7 +46,7 @@ class FriendTile extends StatelessWidget {
                 : 'No Upcoming Events',
             style: TextStyle(
               color: friend.upcomingEvents > 0
-                  ? ColorPalette.lightPinkishRed
+                  ? ColorPalette.darkPink
                   : Colors.grey,
               fontSize: screenWidth * 0.033,
               fontFamily: 'Poppins',
@@ -57,11 +58,12 @@ class FriendTile extends StatelessWidget {
           onTap: () {
             // To-Do: Navigate to friend's gift list screen
             Navigator.push(
-                context,
-                MaterialPageRoute(
+              context,
+              MaterialPageRoute(
                 // will handle fetching the the gift list by event id later
-                builder: (context) => FriendEventsListScreen(friendName: friend.name),
-                ),
+                builder: (context) =>
+                    FriendEventsListScreen(friendName: friend.name),
+              ),
             );
           },
         ),

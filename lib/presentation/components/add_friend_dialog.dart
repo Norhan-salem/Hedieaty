@@ -14,15 +14,20 @@ class _FriendFormState extends State<FriendFormDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          FriendEmailInput(),
-          SizedBox(height: 16),
-          _buildActions(context),
-        ],
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.9,
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FriendEmailInput(onSaved: (value) {
+              friendEmail = value ?? '';
+            }),
+            SizedBox(height: 16),
+            _buildActions(context),
+          ],
+        ),
       ),
     );
   }
@@ -32,6 +37,9 @@ class _FriendFormState extends State<FriendFormDialog> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         TextButton(
+          style: TextButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10))),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -43,12 +51,14 @@ class _FriendFormState extends State<FriendFormDialog> {
             ),
           ),
         ),
+        SizedBox.square(
+          dimension: 10,
+        ),
         ElevatedButton(
           onPressed: () {
             if (_formKey.currentState?.validate() ?? false) {
               _formKey.currentState?.save();
               // TODO: Implement logic to add friend with `friendEmail`
-              print('Friend Email: $friendEmail');
               Navigator.pop(context);
             }
           },

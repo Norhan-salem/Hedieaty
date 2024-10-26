@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hedieaty_flutter_application/core/utils/tile_decoration.dart';
+
 import '../../core/constants/color_palette.dart';
 import '../../data/models/gift_model.dart';
 
@@ -26,8 +27,8 @@ class GiftTile extends StatelessWidget {
       decoration: TileDecoration.tileBorder(),
       child: Card(
         margin: EdgeInsets.zero,
-        color: gift.status == 'pledged'
-            ? ColorPalette.lightYellow
+        color: gift.status.toLowerCase() == 'pledged'
+            ? ColorPalette.yellowHighlight
             : ColorPalette.eggShell,
         child: ListTile(
           title: Text(gift.name,
@@ -46,23 +47,37 @@ class GiftTile extends StatelessWidget {
                   break;
               }
             },
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                  value: 'edit',
-                  child: Text('Edit',
-                      style: TextStyle(
-                          color: ColorPalette.darkTeal,
-                          fontFamily: 'Poppins'))),
-              const PopupMenuItem(
+            itemBuilder: (context) {
+              List<PopupMenuEntry<String>> options = [];
+
+              if (gift.status.toLowerCase() != 'pledged') {
+                options.add(
+                  const PopupMenuItem(
+                    value: 'edit',
+                    child: Text('Edit',
+                        style: TextStyle(
+                            color: ColorPalette.darkTeal,
+                            fontFamily: 'Poppins')),
+                  ),
+                );
+              }
+
+              options.add(
+                const PopupMenuItem(
                   value: 'delete',
                   child: Text('Delete',
                       style: TextStyle(
                           color: ColorPalette.darkTeal,
-                          fontFamily: 'Poppins'))),
-            ],
+                          fontFamily: 'Poppins')),
+                ),
+              );
+
+              return options;
+            },
           ),
         ),
       ),
     );
   }
 }
+

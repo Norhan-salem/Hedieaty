@@ -33,8 +33,8 @@ class _FriendGiftTileState extends State<FriendGiftTile> {
         decoration: TileDecoration.tileBorder(),
         child: Card(
           margin: EdgeInsets.zero,
-          color: widget.gift.status == 'pledged'
-              ? ColorPalette.lightYellow
+          color: widget.gift.status == 'Pledged'
+              ? ColorPalette.yellowHighlight
               : ColorPalette.eggShell,
           child: ListTile(
             title: Text(widget.gift.name,
@@ -70,9 +70,7 @@ class _FriendGiftTileState extends State<FriendGiftTile> {
             if (widget.pledgeManager.canPledgeGift(widget.gift))
               TextButton(
                 onPressed: () {
-                  print('Pledging gift: ${widget.gift.name}');
                   widget.pledgeManager.pledgeGift(widget.gift);
-                  print('New status: ${widget.gift.status}');
                   Navigator.pop(context);
                   setState(() {});
                 },

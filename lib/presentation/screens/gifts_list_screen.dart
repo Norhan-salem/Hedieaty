@@ -1,24 +1,61 @@
 import 'package:flutter/material.dart';
+
 import '../../core/utils/sorting_menu_utils.dart';
 import '../../data/models/gift_model.dart';
-import '../widgets/background_image_container.dart';
-import '../widgets/custom_app_bar.dart';
-import '../widgets/create_event_button.dart';
 import '../components/gift_list.dart';
+import '../widgets/background_image_container.dart';
+import '../widgets/create_event_button.dart';
+import '../widgets/custom_app_bar.dart';
+import 'add_edit_gift_screen.dart';
 
-class GiftsListScreen extends StatelessWidget {
-  GiftsListScreen({Key? key}) : super(key: key);
+class GiftsListScreen extends StatefulWidget {
+  const GiftsListScreen({Key? key}) : super(key: key);
 
+  @override
+  _GiftsListScreenState createState() => _GiftsListScreenState();
+}
+
+class _GiftsListScreenState extends State<GiftsListScreen> {
   final List<Gift> gifts = [
-    Gift(name: 'Smartphone', category: 'Electronics', status: 'available'),
-    Gift(name: 'Book', category: 'Education', status: 'pledged'),
-    Gift(name: 'Headphones', category: 'Electronics', status: 'available'),
+    Gift(
+        name: 'Smartphone',
+        category: 'Electronics',
+        status: 'Available',
+        price: 30.0,
+        description: ''),
+    Gift(
+        name: 'Book',
+        category: 'Education',
+        status: 'Pledged',
+        price: 30.0,
+        description: ''),
+    Gift(
+        name: 'Headphones',
+        category: 'Electronics',
+        status: 'Available',
+        price: 30.0,
+        description: ''),
   ];
+
+  ValueNotifier<List<Gift>> sortedMyGiftsNotifier =
+      ValueNotifier<List<Gift>>([]);
+
+  @override
+  void initState() {
+    super.initState();
+    sortedMyGiftsNotifier.value = gifts;
+  }
+
+  void _addGift(Gift newGift) {
+    setState(() {
+      gifts.add(newGift);
+      sortedMyGiftsNotifier.value = List.from(gifts);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    ValueNotifier<List<Gift>> sortedMyGiftsNotifier =
-    ValueNotifier<List<Gift>>(gifts);
+
     double appBarPadding = MediaQuery.of(context).size.height * 0.02;
 
     return Scaffold(
@@ -39,17 +76,30 @@ class GiftsListScreen extends StatelessWidget {
               CreateEventButton(
                 buttonText: 'Add New Gift',
                 onPressed: () {
-                  // To-Do: Navigate to Add Gift page or open dialog
+                  Navigator.push<Gift>(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddGiftScreen(),
+                    ),
+                  ).then((newGift) {
+                    if (newGift != null) {
+                      _addGift(newGift);
+                    }
+                  });
                 },
               ),
               SizedBox(height: appBarPadding),
               Expanded(
                 child: ValueListenableBuilder<List<Gift>>(
                     valueListenable: sortedMyGiftsNotifier,
-                    builder: (context, sortedGifts, child) {
-                      return GiftList(myGifts: sortedGifts);
-                    }
-                ),
+                    builder: (context, sortedMyGifts, child) {
+                      return GiftList(
+                        myGifts: sortedMyGifts,
+                        onGiftAdded: (Gift newGift) {
+                          _addGift(newGift);
+                        },
+                      );
+                    }),
               ),
             ],
           ),

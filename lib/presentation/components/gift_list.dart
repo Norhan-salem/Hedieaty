@@ -1,32 +1,55 @@
 import 'package:flutter/material.dart';
 
 import '../../data/models/gift_model.dart';
+import '../screens/add_edit_gift_screen.dart';
 import 'gift_tile.dart';
 
-class GiftList extends StatelessWidget {
+class GiftList extends StatefulWidget {
   final List<Gift> myGifts;
+  final Function(Gift) onGiftAdded;
 
-  GiftList({required this.myGifts});
+  GiftList({required this.myGifts, required this.onGiftAdded});
 
-  final List<Gift> gifts = [
-    Gift(name: 'Smartphone', category: 'Electronics', status: 'available'),
-    Gift(name: 'Book', category: 'Education', status: 'pledged'),
-    Gift(name: 'Headphones', category: 'Electronics', status: 'available'),
-  ];
+  @override
+  _GiftListState createState() => _GiftListState();
+}
+
+class _GiftListState extends State<GiftList> {
+  void _deleteGift(int index) {
+    setState(() {
+      widget.myGifts.removeAt(index);
+    });
+  }
+
+  void _updateGift(int index, Gift updatedGift) {
+    setState(() {
+      widget.myGifts[index] = updatedGift;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: gifts.length,
+      itemCount: widget.myGifts.length,
       itemBuilder: (context, index) {
-        final gift = gifts[index];
+        final gift = widget.myGifts[index];
         return GiftTile(
           gift: gift,
           onEdit: () {
-            // Implement edit functionality here
+            Navigator.push<Gift>(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddGiftScreen(gift: gift),
+              ),
+            ).then((updatedGift) {
+              if (updatedGift != null) {
+                _updateGift(index, updatedGift);
+              }
+            });
           },
           onDelete: () {
-            // Implement delete functionality here
+            // Implement delete functionality
+            _deleteGift(index);
           },
         );
       },

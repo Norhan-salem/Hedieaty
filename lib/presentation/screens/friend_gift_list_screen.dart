@@ -12,9 +12,24 @@ class FriendGiftsListScreen extends StatelessWidget {
   FriendGiftsListScreen({Key? key, required this.eventName}) : super(key: key);
 
   final List<Gift> gifts = [
-    Gift(name: 'Smartphone', category: 'Electronics', status: 'available'),
-    Gift(name: 'Book', category: 'Education', status: 'pledged'),
-    Gift(name: 'Headphones', category: 'Electronics', status: 'available'),
+    Gift(
+        name: 'Smartphone',
+        category: 'Electronics',
+        status: 'Available',
+        price: 30.0,
+        description: ''),
+    Gift(
+        name: 'Book',
+        category: 'Education',
+        status: 'Pledged',
+        price: 30.0,
+        description: ''),
+    Gift(
+        name: 'Headphones',
+        category: 'Electronics',
+        status: 'Available',
+        price: 30.0,
+        description: ''),
   ];
 
   @override
