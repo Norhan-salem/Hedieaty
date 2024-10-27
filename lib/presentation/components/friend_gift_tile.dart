@@ -5,6 +5,7 @@ import '../../core/utils/tile_decoration.dart';
 import '../../data/models/gift_model.dart';
 import '../../domain/managers/gift_pledge_manager.dart';
 import '../screens/gift_details_screen.dart';
+import '../widgets/custom_alert_dialog.dart';
 
 class FriendGiftTile extends StatefulWidget {
   final Gift gift;
@@ -53,13 +54,8 @@ class _FriendGiftTileState extends State<FriendGiftTile> {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          backgroundColor: ColorPalette.eggShell,
-          title: Text(
-            'Gift Options',
-            style:
-                TextStyle(color: ColorPalette.darkTeal, fontFamily: 'Poppins'),
-          ),
+        return CustomAlertDialog(
+          title: 'Gift Options',
           content: Text(
             widget.pledgeManager.canPledgeGift(widget.gift)
                 ? 'Do you want to pledge this gift or view details?'
@@ -70,6 +66,9 @@ class _FriendGiftTileState extends State<FriendGiftTile> {
           actions: [
             if (widget.pledgeManager.canPledgeGift(widget.gift))
               TextButton(
+                style: TextButton.styleFrom(backgroundColor: ColorPalette.darkPink,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    side: BorderSide(color: ColorPalette.darkTeal, width: 3)),
                 onPressed: () {
                   widget.pledgeManager.pledgeGift(widget.gift);
                   Navigator.pop(context);
@@ -77,9 +76,12 @@ class _FriendGiftTileState extends State<FriendGiftTile> {
                 },
                 child: Text('Pledge Gift',
                     style: TextStyle(
-                        color: ColorPalette.darkTeal, fontFamily: 'Poppins')),
+                        color: ColorPalette.eggShell, fontFamily: 'Poppins')),
               ),
             TextButton(
+              style: TextButton.styleFrom(backgroundColor: ColorPalette.darkCyan,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  side: BorderSide(color: ColorPalette.darkTeal, width: 3)),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -90,9 +92,11 @@ class _FriendGiftTileState extends State<FriendGiftTile> {
               },
               child: Text('View Details',
                   style: TextStyle(
-                      color: ColorPalette.darkTeal, fontFamily: 'Poppins')),
+                      color: ColorPalette.eggShell, fontFamily: 'Poppins')),
             ),
             TextButton(
+        style: TextButton.styleFrom(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),),
               onPressed: () {
                 Navigator.pop(context);
               },

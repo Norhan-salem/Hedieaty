@@ -39,7 +39,7 @@ class _FriendFormState extends State<FriendFormDialog> {
         TextButton(
           style: TextButton.styleFrom(
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10))),
+                  borderRadius: BorderRadius.circular(8))),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -67,7 +67,7 @@ class _FriendFormState extends State<FriendFormDialog> {
             backgroundColor: ColorPalette.darkCyan,
             side: BorderSide(color: ColorPalette.darkTeal, width: 3),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(8),
             ),
           ),
           child: Text('Add', style: TextStyle(fontFamily: 'Poppins')),
