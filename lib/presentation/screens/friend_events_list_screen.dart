@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/background_image_container.dart';
+
 import '../../core/utils/sorting_menu_utils.dart';
 import '../../data/models/event_model.dart';
 import '../components/friend_event_list.dart';
@@ -12,9 +13,27 @@ class FriendEventsListScreen extends StatelessWidget {
       : super(key: key);
 
   List<Event> events = [
-    Event(name: 'Birthday Party', category: 'Celebration', status: 'Upcoming', description: '', location: '', date: DateTime. utc(1989, 11, 9)),
-    Event(name: 'Meeting', category: 'Work', status: 'Current', description: '', location: '', date: DateTime. utc(1989, 11, 9)),
-    Event(name: 'Concert', category: 'Entertainment', status: 'Past', description: '', location: '', date: DateTime. utc(1989, 11, 9))
+    Event(
+        name: 'Birthday Party',
+        category: 'Celebration',
+        status: 'Upcoming',
+        description: '',
+        location: '',
+        date: DateTime.utc(1989, 11, 9)),
+    Event(
+        name: 'Meeting',
+        category: 'Work',
+        status: 'Current',
+        description: '',
+        location: '',
+        date: DateTime.utc(1989, 11, 9)),
+    Event(
+        name: 'Concert',
+        category: 'Entertainment',
+        status: 'Past',
+        description: '',
+        location: '',
+        date: DateTime.utc(1989, 11, 9))
   ];
 
   @override

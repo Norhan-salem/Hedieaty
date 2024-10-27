@@ -18,6 +18,7 @@ class CustomDropdownButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
 
     double dropdownFontSize = screenWidth * 0.045;
     double padding = screenWidth * 0.02;
@@ -28,6 +29,9 @@ class CustomDropdownButton extends StatelessWidget {
       child: Container(
         width: dropdownWidth,
         child: DropdownButtonFormField<String>(
+          icon: Icon(Icons.keyboard_arrow_down_rounded),
+          iconSize: 30,
+          menuMaxHeight: screenHeight * 0.2,
           iconEnabledColor: ColorPalette.darkTeal,
           value: category,
           decoration: InputDecoration(

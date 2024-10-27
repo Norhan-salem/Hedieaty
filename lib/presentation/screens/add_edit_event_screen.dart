@@ -51,7 +51,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
-    double padding = screenWidth * 0.04;
+    double padding = screenWidth * 0.07;
 
     return Scaffold(
       appBar: CustomAppBar(

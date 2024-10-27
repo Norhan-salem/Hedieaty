@@ -1,5 +1,5 @@
 class Gift {
-  String? imageURL = 'assets/images/gift_default_img.png';
+  String? imageURL;
   final String name;
   final String category;
   String status; // e.g., "available", "pledged"

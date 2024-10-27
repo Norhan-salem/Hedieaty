@@ -10,7 +10,7 @@ class TileDecoration {
       boxShadow: [
         BoxShadow(
           color: ColorPalette.darkTeal,
-          offset: Offset(3, 3),
+          offset: Offset(2, 3),
           spreadRadius: 1,
         ),
       ],

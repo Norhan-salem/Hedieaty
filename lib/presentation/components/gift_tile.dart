@@ -23,7 +23,9 @@ class GiftTile extends StatelessWidget {
 
     return Container(
       margin: EdgeInsets.symmetric(
-          vertical: screenHeight * 0.008, horizontal: screenWidth * 0.05),
+        vertical: screenHeight * 0.008,
+        horizontal: screenWidth * 0.05,
+      ),
       decoration: TileDecoration.tileBorder(),
       child: Card(
         margin: EdgeInsets.zero,
@@ -31,53 +33,72 @@ class GiftTile extends StatelessWidget {
             ? ColorPalette.yellowHighlight
             : ColorPalette.eggShell,
         child: ListTile(
-          title: Text(gift.name,
-              style: TextStyle(
-                  color: ColorPalette.darkTeal, fontFamily: 'Poppins')),
-          subtitle: Text('${gift.category} - ${gift.status}',
-              style: TextStyle(color: Colors.grey, fontFamily: 'Poppins')),
-          trailing: PopupMenuButton<String>(
-            onSelected: (value) {
-              switch (value) {
-                case 'edit':
-                  onEdit();
-                  break;
-                case 'delete':
-                  onDelete();
-                  break;
-              }
-            },
-            itemBuilder: (context) {
-              List<PopupMenuEntry<String>> options = [];
+          title: Text(
+            gift.name,
+            style:
+                TextStyle(color: ColorPalette.darkTeal, fontFamily: 'Poppins'),
+          ),
+          subtitle: Text(
+            '${gift.category} - ${gift.status}',
+            style: TextStyle(color: Colors.grey, fontFamily: 'Poppins'),
+          ),
+          trailing: Theme(
+            data: Theme.of(context).copyWith(
+              popupMenuTheme: PopupMenuThemeData(
+                color: ColorPalette.eggShell,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    side: BorderSide(color: ColorPalette.darkTeal, width: 1)),
+              ),
+            ),
+            child: PopupMenuButton<String>(
+              onSelected: (value) {
+                switch (value) {
+                  case 'edit':
+                    onEdit();
+                    break;
+                  case 'delete':
+                    onDelete();
+                    break;
+                }
+              },
+              itemBuilder: (context) {
+                List<PopupMenuEntry<String>> options = [];
 
-              if (gift.status.toLowerCase() != 'pledged') {
+                if (gift.status.toLowerCase() != 'pledged') {
+                  options.add(
+                    const PopupMenuItem(
+                      value: 'edit',
+                      child: Text(
+                        'Edit',
+                        style: TextStyle(
+                          color: ColorPalette.darkTeal,
+                          fontFamily: 'Poppins',
+                        ),
+                      ),
+                    ),
+                  );
+                }
+
                 options.add(
                   const PopupMenuItem(
-                    value: 'edit',
-                    child: Text('Edit',
-                        style: TextStyle(
-                            color: ColorPalette.darkTeal,
-                            fontFamily: 'Poppins')),
+                    value: 'delete',
+                    child: Text(
+                      'Delete',
+                      style: TextStyle(
+                        color: ColorPalette.darkTeal,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
                   ),
                 );
-              }
 
-              options.add(
-                const PopupMenuItem(
-                  value: 'delete',
-                  child: Text('Delete',
-                      style: TextStyle(
-                          color: ColorPalette.darkTeal,
-                          fontFamily: 'Poppins')),
-                ),
-              );
-
-              return options;
-            },
+                return options;
+              },
+            ),
           ),
         ),
       ),
     );
   }
 }
-

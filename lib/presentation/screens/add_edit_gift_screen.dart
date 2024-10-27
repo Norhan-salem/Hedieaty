@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/background_image_container.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/create_event_button.dart';
@@ -7,6 +9,7 @@ import 'package:hedieaty_flutter_application/presentation/widgets/details_input_
 import '../../data/models/gift_model.dart';
 import '../components/custom_dropdown_list.dart';
 import '../components/gift_status_toggle.dart';
+import '../components/img_upload.dart';
 
 class AddGiftScreen extends StatefulWidget {
   final Gift? gift;
@@ -25,6 +28,7 @@ class _AddGiftScreenState extends State<AddGiftScreen> {
   late TextEditingController priceController;
   String? category;
   late String giftStatus;
+  File? selectedImage;
 
   @override
   void initState() {
@@ -51,7 +55,7 @@ class _AddGiftScreenState extends State<AddGiftScreen> {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
-    double padding = screenWidth * 0.04;
+    double padding = screenWidth * 0.07;
 
     return Scaffold(
       appBar:
@@ -66,6 +70,15 @@ class _AddGiftScreenState extends State<AddGiftScreen> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
+                      ImagePickerWidget(
+                        initialImagePath: widget.gift?.imageURL,
+                        onImageSelected: (image) {
+                          setState(() {
+                            selectedImage = image;
+                          });
+                        },
+                      ),
+                      SizedBox(height: screenHeight * 0.02),
                       DetailsTextField(
                         controller: nameController,
                         labelText: 'Gift Name',
@@ -133,6 +146,8 @@ class _AddGiftScreenState extends State<AddGiftScreen> {
                               category: category ?? 'Other',
                               status: giftStatus,
                               price: double.parse(priceController.text),
+                              imageURL: selectedImage?.path ??
+                                  'assets/images/gift_default_img.png',
                             );
 
                             Navigator.pop(context, newGift);
