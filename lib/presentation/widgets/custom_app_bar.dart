@@ -5,12 +5,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final IconData? actionIcon;
   final VoidCallback? onActionPressed;
+  final Widget? leadingIcon;
 
   const CustomAppBar({
     Key? key,
     required this.title,
     this.actionIcon,
-    this.onActionPressed,
+    this.onActionPressed, this.leadingIcon,
   }) : super(key: key);
 
   @override
@@ -23,6 +24,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     double iconSize = screenWidth * 0.08;
 
     return Container(
+      padding: EdgeInsets.all(screenWidth * 0.02),
       decoration: BoxDecoration(
         color: ColorPalette.lightYellow,
         border: Border(
@@ -30,6 +32,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       child: AppBar(
+        leading: leadingIcon,
         title: Text(
           title,
           style: TextStyle(

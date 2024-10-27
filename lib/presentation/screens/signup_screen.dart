@@ -44,7 +44,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _registrationState.updateConfirmPassword(_confirmPasswordController.text);
 
     if (_registrationState.isValid()) {
-      // Proceed with registration
       Navigator.push(
         context,
         MaterialPageRoute(

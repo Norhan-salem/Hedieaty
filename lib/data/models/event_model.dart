@@ -1,3 +1,5 @@
+import 'gift_model.dart';
+
 class Event {
   final String name;
   final String category;
@@ -5,6 +7,7 @@ class Event {
   final String description;
   final String location;
   final DateTime date;
+  List<Gift>? gifts;
 
   Event({
     required this.name,
@@ -13,5 +16,6 @@ class Event {
     required this.description,
     required this.location,
     required this.date,
+    this.gifts,
   });
 }
