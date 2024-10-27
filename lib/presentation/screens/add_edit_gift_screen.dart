@@ -115,7 +115,7 @@ class _AddGiftScreenState extends State<AddGiftScreen> {
                       ),
                       DetailsTextField(
                         controller: priceController,
-                        labelText: 'Price',
+                        labelText: 'Price (USD)',
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter a price';

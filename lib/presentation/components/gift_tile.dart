@@ -3,6 +3,7 @@ import 'package:hedieaty_flutter_application/core/utils/tile_decoration.dart';
 
 import '../../core/constants/color_palette.dart';
 import '../../data/models/gift_model.dart';
+import '../screens/gift_details_screen.dart';
 
 class GiftTile extends StatelessWidget {
   final Gift gift;
@@ -32,45 +33,69 @@ class GiftTile extends StatelessWidget {
         color: gift.status.toLowerCase() == 'pledged'
             ? ColorPalette.yellowHighlight
             : ColorPalette.eggShell,
-        child: ListTile(
-          title: Text(
-            gift.name,
-            style:
-                TextStyle(color: ColorPalette.darkTeal, fontFamily: 'Poppins'),
-          ),
-          subtitle: Text(
-            '${gift.category} - ${gift.status}',
-            style: TextStyle(color: Colors.grey, fontFamily: 'Poppins'),
-          ),
-          trailing: Theme(
-            data: Theme.of(context).copyWith(
-              popupMenuTheme: PopupMenuThemeData(
-                color: ColorPalette.eggShell,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    side: BorderSide(color: ColorPalette.darkTeal, width: 1)),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => GiftDetailsScreen(gift: gift),
               ),
+            );
+          },
+          child: ListTile(
+            title: Text(
+              gift.name,
+              style: TextStyle(
+                  color: ColorPalette.darkTeal, fontFamily: 'Poppins'),
             ),
-            child: PopupMenuButton<String>(
-              onSelected: (value) {
-                switch (value) {
-                  case 'edit':
-                    onEdit();
-                    break;
-                  case 'delete':
-                    onDelete();
-                    break;
-                }
-              },
-              itemBuilder: (context) {
-                List<PopupMenuEntry<String>> options = [];
+            subtitle: Text(
+              '${gift.category} - ${gift.status}',
+              style: TextStyle(color: Colors.grey, fontFamily: 'Poppins'),
+            ),
+            trailing: Theme(
+              data: Theme.of(context).copyWith(
+                popupMenuTheme: PopupMenuThemeData(
+                  color: ColorPalette.eggShell,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    side: BorderSide(color: ColorPalette.darkTeal, width: 1),
+                  ),
+                ),
+              ),
+              child: PopupMenuButton<String>(
+                onSelected: (value) {
+                  switch (value) {
+                    case 'edit':
+                      onEdit();
+                      break;
+                    case 'delete':
+                      onDelete();
+                      break;
+                  }
+                },
+                itemBuilder: (context) {
+                  List<PopupMenuEntry<String>> options = [];
 
-                if (gift.status.toLowerCase() != 'pledged') {
+                  if (gift.status.toLowerCase() != 'pledged') {
+                    options.add(
+                      const PopupMenuItem(
+                        value: 'edit',
+                        child: Text(
+                          'Edit',
+                          style: TextStyle(
+                            color: ColorPalette.darkTeal,
+                            fontFamily: 'Poppins',
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+
                   options.add(
                     const PopupMenuItem(
-                      value: 'edit',
+                      value: 'delete',
                       child: Text(
-                        'Edit',
+                        'Delete',
                         style: TextStyle(
                           color: ColorPalette.darkTeal,
                           fontFamily: 'Poppins',
@@ -78,23 +103,10 @@ class GiftTile extends StatelessWidget {
                       ),
                     ),
                   );
-                }
 
-                options.add(
-                  const PopupMenuItem(
-                    value: 'delete',
-                    child: Text(
-                      'Delete',
-                      style: TextStyle(
-                        color: ColorPalette.darkTeal,
-                        fontFamily: 'Poppins',
-                      ),
-                    ),
-                  ),
-                );
-
-                return options;
-              },
+                  return options;
+                },
+              ),
             ),
           ),
         ),

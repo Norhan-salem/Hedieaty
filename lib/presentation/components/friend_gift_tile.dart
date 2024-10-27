@@ -4,6 +4,7 @@ import '../../core/constants/color_palette.dart';
 import '../../core/utils/tile_decoration.dart';
 import '../../data/models/gift_model.dart';
 import '../../domain/managers/gift_pledge_manager.dart';
+import '../screens/gift_details_screen.dart';
 
 class FriendGiftTile extends StatefulWidget {
   final Gift gift;
@@ -80,8 +81,12 @@ class _FriendGiftTileState extends State<FriendGiftTile> {
               ),
             TextButton(
               onPressed: () {
-                // Add navigation to gift details screen
-                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => GiftDetailsScreen(gift: widget.gift),
+                  ),
+                );
               },
               child: Text('View Details',
                   style: TextStyle(
