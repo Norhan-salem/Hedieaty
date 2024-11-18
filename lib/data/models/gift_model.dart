@@ -1,3 +1,5 @@
+import '../../domain/enums/GiftCategory.dart';
+
 class Gift {
   int id;
   String name;
@@ -47,5 +49,11 @@ class Gift {
       'event_id': eventId,
       'isDeleted': isDeleted ? 1 : 0,
     };
+  }
+
+  GiftCategory get giftCategory => GiftCategory.values[category];
+
+  set giftCategory(GiftCategory category) {
+    this.category = category.index;
   }
 }

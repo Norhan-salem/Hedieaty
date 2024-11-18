@@ -1,3 +1,5 @@
+import '../../domain/enums/EventCategory.dart';
+
 class Event {
   int id;
   String name;
@@ -43,5 +45,11 @@ class Event {
       'user_id': userId,
       'isDeleted': isDeleted ? 1 : 0,
     };
+  }
+
+  EventCategory get eventCategory => EventCategory.values[category];
+
+  set eventCategory(EventCategory category) {
+    this.category = category.index;
   }
 }
