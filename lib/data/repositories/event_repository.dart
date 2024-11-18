@@ -1,5 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 
+import '../../domain/enums/EventStatus.dart';
 import '../datasources/database_helper.dart';
 import '../models/event_model.dart';
 
@@ -86,16 +87,16 @@ class EventRepository {
     }
   }
 
-  int getEventStatus(Event event) {
+  EventStatus getEventStatus(Event event) {
     final currentDate = DateTime.now();
     final eventDate = DateTime.parse(event.date);
 
     if (eventDate.isBefore(currentDate)) {
-      return 2; // "past" status
+      return EventStatus.past;
     } else if (eventDate.isAfter(currentDate)) {
-      return 0; // "upcoming" status
+      return EventStatus.upcoming;
     } else {
-      return 1; // "current" status
+      return EventStatus.current;
     }
   }
 }
