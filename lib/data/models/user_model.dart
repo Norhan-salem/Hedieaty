@@ -5,7 +5,6 @@ class User {
   String password;
   String phoneNumber;
   String profileImagePath;
-  int preferences;
 
   User({
     required this.id,
@@ -14,7 +13,6 @@ class User {
     required this.password,
     required this.phoneNumber,
     required this.profileImagePath,
-    required this.preferences,
   });
 
   factory User.fromMap(Map<String, dynamic> map) {
@@ -25,7 +23,6 @@ class User {
       password: map['password'],
       phoneNumber: map['phone_number'],
       profileImagePath: map['profile_image_path'],
-      preferences: map['preferences'],
     );
   }
 
@@ -37,7 +34,6 @@ class User {
       'password': password,
       'phone_number': phoneNumber,
       'profile_image_path': profileImagePath,
-      'preferences': preferences,
     };
   }
 }

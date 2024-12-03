@@ -30,7 +30,7 @@ class Event {
       description: map['description'],
       category: map['category'],
       userId: map['user_id'],
-      isDeleted: map['isDeleted'] == 1,
+      isDeleted: map['isDeleted'] == 0,
     );
   }
 

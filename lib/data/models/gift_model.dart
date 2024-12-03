@@ -9,7 +9,9 @@ class Gift {
   double price;
   int status;
   int eventId;
+  int pledged_by_user_id;
   bool isDeleted;
+  bool isPublished;
 
   Gift({
     required this.id,
@@ -20,7 +22,9 @@ class Gift {
     required this.price,
     required this.status,
     required this.eventId,
+    required this.pledged_by_user_id,
     this.isDeleted = false,
+    this.isPublished = false
   });
 
   factory Gift.fromMap(Map<String, dynamic> map) {
@@ -33,7 +37,9 @@ class Gift {
       price: map['price'],
       status: map['status'],
       eventId: map['event_id'],
-      isDeleted: map['isDeleted'] == 1,
+      pledged_by_user_id : map['pledged_by_user_id'],
+      isDeleted: map['isDeleted'] == 0,
+      isPublished: map['isPublished'] == 0,
     );
   }
 
@@ -47,7 +53,9 @@ class Gift {
       'price': price,
       'status': status,
       'event_id': eventId,
+      'pledged_by_user_id': pledged_by_user_id,
       'isDeleted': isDeleted ? 1 : 0,
+      'isPublished': isPublished ? 1 : 0
     };
   }
 
