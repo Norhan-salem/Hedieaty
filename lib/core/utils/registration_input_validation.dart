@@ -1,7 +1,7 @@
 
 class RegistrationInputValidation {
   static bool isEmailValid(String email) {
-  // Simple email validation regex
+  // email validation regex
   final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
   return emailRegex.hasMatch(email);
   }
@@ -19,6 +19,11 @@ class RegistrationInputValidation {
 
   static bool doPasswordsMatch(String password, String confirmPassword) {
   return password == confirmPassword;
+  }
+
+  static bool isPhoneNumberValid(String phoneNumber) {
+    final phoneRegex = RegExp(r'^\+\d{1,3}\d{9,}$');
+    return phoneRegex.hasMatch(phoneNumber);
   }
 }
 
