@@ -78,16 +78,20 @@ class _InputTextFieldState extends State<InputTextField> {
                 : null,
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                color: widget.errorText == null ? ColorPalette.darkCyan : ColorPalette.darkPink,
+                color: ColorPalette.darkCyan,
                 width: 2.0,
               ),
               borderRadius: BorderRadius.circular(10),
             ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                color: widget.errorText == null ? ColorPalette.darkCyan : ColorPalette.darkPink,
+                color: ColorPalette.darkCyan,
                 width: 2.0,
               ),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: ColorPalette.darkPink, width: 2.0),
               borderRadius: BorderRadius.circular(10),
             ),
             filled: true,
@@ -99,18 +103,6 @@ class _InputTextFieldState extends State<InputTextField> {
             ),
           ),
         ),
-        if (widget.errorText != null)
-          Padding(
-            padding: const EdgeInsets.only(top: 4.0, left: 8.0),
-            child: Text(
-              widget.errorText!,
-              style: TextStyle(
-                color: ColorPalette.darkPink,
-                fontFamily: 'Poppins',
-                fontSize: 12,
-              ),
-            ),
-          ),
       ],
     );
   }
