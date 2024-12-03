@@ -3,6 +3,8 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/registration_button.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/title_label.dart';
 import '../../core/constants/color_palette.dart';
+import '../../core/utils/password_visibility_utils.dart';
+import '../../data/services/authentication_service.dart';
 import '../state/registration_state.dart';
 import '../widgets/credentials_input_text_field.dart';
 import 'home_screen.dart';
@@ -19,36 +21,41 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
 
-  bool _obscurePassword = true;
-  bool _obscureConfirmPassword = true;
+  final PasswordVisibilityController _passwordVisibilityController =
+  PasswordVisibilityController(true);
+  final PasswordVisibilityController _confirmPasswordVisibilityController =
+  PasswordVisibilityController(true);
 
   final RegistrationState _registrationState = RegistrationState();
+  final AuthService _authService = AuthService();
 
-  void _togglePasswordVisibility() {
-    setState(() {
-      _obscurePassword = !_obscurePassword;
-    });
-  }
-
-  void _toggleConfirmPasswordVisibility() {
-    setState(() {
-      _obscureConfirmPassword = !_obscureConfirmPassword;
-    });
-  }
-
-  void _registerUser() {
+  void _registerUser() async {
     _registrationState.updateName(_nameController.text);
     _registrationState.updateEmail(_emailController.text);
     _registrationState.updatePassword(_passwordController.text);
+    _registrationState.updatePhoneNumber(_phoneNumberController.text);
     _registrationState.updateConfirmPassword(_confirmPasswordController.text);
 
     if (_registrationState.isValid()) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => HomeScreen()),
-      );
+      try {
+        final user = await _authService.registerUser(
+          _emailController.text,
+          _passwordController.text,
+        );
+
+        if (user != null) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString())),
+        );
+      }
     }
   }
 
@@ -63,6 +70,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Stack(
         fit: StackFit.expand,
         children: [
@@ -70,12 +78,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
             'assets/images/registration_bg.png',
             fit: BoxFit.cover,
           ),
-          Padding(
+          SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 60),
+                SizedBox(height: 200),
                 TitleLabel(text: 'Get on Board!'),
                 SizedBox(height: 20),
                 InputTextField(
@@ -95,11 +103,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 SizedBox(height: 16),
                 InputTextField(
+                  label: 'Phone Number',
+                  controller: _phoneNumberController,
+                  leadingIcon: Icons.call_outlined,
+                  errorText: _registrationState.phoneNumberError,
+                  onChanged: (value) => _registrationState.updatePhoneNumber(value),
+                ),
+                SizedBox(height: 16),
+                InputTextField(
                   label: 'Password',
                   controller: _passwordController,
                   isPassword: true,
-                  obscureText: _obscurePassword,
-                  togglePasswordView: _togglePasswordVisibility,
+                  obscureText: _passwordVisibilityController.obscureText,
+                  togglePasswordView: () {
+                    _passwordVisibilityController.toggleVisibility(() {
+                      setState(() {
+                        _passwordVisibilityController.obscureText =
+                        !_passwordVisibilityController.obscureText;
+                      });
+                    });
+                  },
                   leadingIcon: Icons.lock_outline,
                   errorText: _registrationState.passwordError,
                   onChanged: (value) => _registrationState.updatePassword(value),
@@ -109,8 +132,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   label: 'Confirm Password',
                   controller: _confirmPasswordController,
                   isPassword: true,
-                  obscureText: _obscureConfirmPassword,
-                  togglePasswordView: _toggleConfirmPasswordVisibility,
+                  obscureText: _confirmPasswordVisibilityController.obscureText,
+                  togglePasswordView: () {
+                    _confirmPasswordVisibilityController.toggleVisibility(() {
+                      setState(() {
+                        _confirmPasswordVisibilityController.obscureText =
+                        !_confirmPasswordVisibilityController.obscureText;
+                      });
+                    });
+                  },
                   leadingIcon: Icons.lock_outlined,
                   errorText: _registrationState.confirmPasswordError,
                   onChanged: (value) => _registrationState.updateConfirmPassword(value),
@@ -124,12 +154,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => LoginScreen()),
+                      MaterialPageRoute(builder: (context) => LoginScreen()),
                     );
                   },
-                  child: Text('Already have an account? Log In',
-                    style: TextStyle(color: ColorPalette.darkCyan, fontFamily: 'Poppins'),),
+                  child: Text(
+                    'Already have an account? Log In',
+                    style: TextStyle(color: ColorPalette.darkCyan, fontFamily: 'Poppins'),
+                  ),
                 ),
               ],
             ),
@@ -139,6 +170,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 }
+
+
 
 
 
