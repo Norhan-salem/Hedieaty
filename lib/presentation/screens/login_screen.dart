@@ -3,28 +3,42 @@ import 'package:hedieaty_flutter_application/presentation/screens/signup_screen.
 import 'package:hedieaty_flutter_application/presentation/widgets/registration_button.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/title_label.dart';
 import '../../core/constants/color_palette.dart';
+import '../../core/utils/password_visibility_utils.dart';
+import '../../data/services/authentication_service.dart';
 import '../widgets/credentials_input_text_field.dart';
-
+import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _SignUpScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final PasswordVisibilityController _passwordVisibilityController =
+  PasswordVisibilityController(true);
 
-  bool _obscurePassword = true;
+  final AuthService _authService = AuthService();
 
+  void _authenticateUser() async {
+    try {
+      final user = await _authService.loginUser(
+        _emailController.text,
+        _passwordController.text,
+      );
 
-  void _togglePasswordVisibility() {
-    setState(() {
-      _obscurePassword = !_obscurePassword;
-    });
-  }
-
-  void _authenticateUser() {
+      if (user != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    }
   }
 
   @override
@@ -55,8 +69,15 @@ class _SignUpScreenState extends State<LoginScreen> {
                   label: 'Password',
                   controller: _passwordController,
                   isPassword: true,
-                  obscureText: _obscurePassword,
-                  togglePasswordView: _togglePasswordVisibility,
+                  obscureText: _passwordVisibilityController.obscureText,
+                  togglePasswordView: () {
+                    _passwordVisibilityController.toggleVisibility(() {
+                      setState(() {
+                        _passwordVisibilityController.obscureText =
+                        !_passwordVisibilityController.obscureText;
+                      });
+                    });
+                  },
                   leadingIcon: Icons.lock_outline,
                 ),
                 SizedBox(height: 32),
@@ -68,11 +89,13 @@ class _SignUpScreenState extends State<LoginScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => SignUpScreen()),
+                      MaterialPageRoute(builder: (context) => SignUpScreen()),
                     );
                   },
-                  child: Text('Not registered yet? Sign Up', style: TextStyle(color: ColorPalette.darkCyan, fontFamily: 'Poppins'),),
+                  child: Text(
+                    'Not registered yet? Sign Up',
+                    style: TextStyle(color: ColorPalette.darkCyan, fontFamily: 'Poppins'),
+                  ),
                 ),
               ],
             ),
