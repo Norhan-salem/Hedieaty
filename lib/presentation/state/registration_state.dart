@@ -1,40 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:hedieaty_flutter_application/core/utils/registration_input_validation.dart';
 
-
 class RegistrationState extends ChangeNotifier {
   String email = '';
   String password = '';
   String confirmPassword = '';
   String name = '';
+  String phoneNumber = '';
 
   String? emailError;
   String? passwordError;
   String? confirmPasswordError;
   String? nameError;
+  String? phoneNumberError;
 
   void updateEmail(String value) {
     email = value;
-    emailError = RegistrationInputValidation.isEmailValid(value) ? null : 'Invalid email format';
+    emailError = RegistrationInputValidation.isEmailValid(value)
+        ? null
+        : 'Invalid email format';
     notifyListeners();
   }
 
   void updatePassword(String value) {
     password = value;
-    passwordError = RegistrationInputValidation.isPasswordValid(value) ? null : 'Password must be at least 8 characters, including one uppercase letter, one lowercase letter, and one number';
-    confirmPasswordError = RegistrationInputValidation.doPasswordsMatch(value, confirmPassword) ? null : 'Passwords do not match';
+    passwordError = RegistrationInputValidation.isPasswordValid(value)
+        ? null
+        : 'Password must be at least 8 characters, including one uppercase letter, one lowercase letter, and one number';
+    confirmPasswordError = RegistrationInputValidation.doPasswordsMatch(value, confirmPassword)
+        ? null
+        : 'Passwords do not match';
     notifyListeners();
   }
 
   void updateConfirmPassword(String value) {
     confirmPassword = value;
-    confirmPasswordError = RegistrationInputValidation.doPasswordsMatch(password, value) ? null : 'Passwords do not match';
+    confirmPasswordError = RegistrationInputValidation.doPasswordsMatch(password, value)
+        ? null
+        : 'Passwords do not match';
     notifyListeners();
   }
 
   void updateName(String value) {
     name = value;
-    nameError = RegistrationInputValidation.isNameValid(value) ? null : 'Name must be at least 3 letters';
+    nameError = RegistrationInputValidation.isNameValid(value)
+        ? null
+        : 'Name must be at least 3 letters';
+    notifyListeners();
+  }
+
+  void updatePhoneNumber(String value) {
+    phoneNumber = value;
+    phoneNumberError = RegistrationInputValidation.isPhoneNumberValid(value)
+        ? null
+        : 'Invalid phone number format';
     notifyListeners();
   }
 
@@ -42,8 +61,10 @@ class RegistrationState extends ChangeNotifier {
     return emailError == null &&
         passwordError == null &&
         confirmPasswordError == null &&
-        nameError == null;
+        nameError == null &&
+        phoneNumberError == null;
   }
 }
+
 
 
