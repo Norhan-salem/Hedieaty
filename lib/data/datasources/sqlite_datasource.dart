@@ -53,8 +53,10 @@ class DatabaseHelper {
       price REAL,
       status INTEGER,  -- 0 for available, 1 for pledged, 2 for purchased.
       event_id INTEGER,
+      pledged_by_user_id INTEGER,
       isDeleted INTEGER DEFAULT 0,
       FOREIGN KEY(event_id) REFERENCES events(id)
+      FOREIGN KEY(pledged_by_user_id) REFERENCES users(id)
     );
     
     CREATE TABLE friends (
