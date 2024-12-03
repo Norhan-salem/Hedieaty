@@ -1,12 +1,12 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-class DatabaseHelper {
-  static final DatabaseHelper _instance = DatabaseHelper._internal();
-  factory DatabaseHelper() => _instance;
+class SqliteDataSource {
+  static final SqliteDataSource _instance = SqliteDataSource._internal();
+  factory SqliteDataSource() => _instance;
   static Database? _database;
 
-  DatabaseHelper._internal();
+  SqliteDataSource._internal();
 
   Future<Database> get database async {
     if (_database != null) return _database!;
@@ -23,17 +23,16 @@ class DatabaseHelper {
   _onCreate(Database db, int version) async {
     await db.execute('''
     CREATE TABLE users (
-      id INTEGER PRIMARY KEY,
-      username TEXT UNIQUE,
-      email TEXT,
+      id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      username TEXT UNIQUE NOT NULL,
+      email TEXT NOT NULL,
       password TEXT,
-      phone_number TEXT, 
+      phone_number TEXT NOT NULL, 
       profile_image_path TEXT, 
-      preferences INTEGER DEFAULT 0 -- 0 (notif), 1 (no notif)
     );
     
     CREATE TABLE events (
-      id INTEGER PRIMARY KEY,
+      id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
       name TEXT,
       date TEXT, 
       location TEXT,
@@ -45,7 +44,7 @@ class DatabaseHelper {
     );
     
     CREATE TABLE gifts (
-      id INTEGER PRIMARY KEY,
+      id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
       name TEXT,
       gift_image_path TEXT,  -- Local image path or URL
       description TEXT,
@@ -55,12 +54,13 @@ class DatabaseHelper {
       event_id INTEGER,
       pledged_by_user_id INTEGER,
       isDeleted INTEGER DEFAULT 0,
-      FOREIGN KEY(event_id) REFERENCES events(id)
+      isPublished INTEGER DEFAULT 0,
+      FOREIGN KEY(event_id) REFERENCES events(id),
       FOREIGN KEY(pledged_by_user_id) REFERENCES users(id)
     );
     
     CREATE TABLE friends (
-      user_id INTEGER,
+      user_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
       friend_id INTEGER,
       PRIMARY KEY(user_id, friend_id),
       FOREIGN KEY(user_id) REFERENCES users(id),
