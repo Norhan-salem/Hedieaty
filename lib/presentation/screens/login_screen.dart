@@ -4,6 +4,7 @@ import 'package:hedieaty_flutter_application/presentation/widgets/registration_b
 import 'package:hedieaty_flutter_application/presentation/widgets/title_label.dart';
 import '../../core/constants/color_palette.dart';
 import '../../core/utils/password_visibility_utils.dart';
+import '../../data/repositories/user_repository.dart';
 import '../../data/services/authentication_service.dart';
 import '../widgets/credentials_input_text_field.dart';
 import 'home_screen.dart';
@@ -27,6 +28,9 @@ class _LoginScreenState extends State<LoginScreen> {
         _emailController.text,
         _passwordController.text,
       );
+
+      final userId = await UserRepository().fetchCurrentUser();
+      print('User fetched from local DB with ID: $userId');
 
       if (user != null) {
         Navigator.pushReplacement(
