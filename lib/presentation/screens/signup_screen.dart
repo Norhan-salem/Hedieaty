@@ -4,6 +4,8 @@ import 'package:hedieaty_flutter_application/presentation/widgets/registration_b
 import 'package:hedieaty_flutter_application/presentation/widgets/title_label.dart';
 import '../../core/constants/color_palette.dart';
 import '../../core/utils/password_visibility_utils.dart';
+import '../../data/models/user_model.dart';
+import '../../data/repositories/user_repository.dart';
 import '../../data/services/authentication_service.dart';
 import '../state/registration_state.dart';
 import '../widgets/credentials_input_text_field.dart';
@@ -40,17 +42,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     if (_registrationState.isValid()) {
       try {
-        final user = await _authService.registerUser(
+        final firebaseUser = await _authService.registerUser(
           _emailController.text,
           _passwordController.text,
         );
 
-        if (user != null) {
+        if (firebaseUser != null) {
+          final localUser = User(
+            id: firebaseUser.uid,
+            username: _nameController.text,
+            email: _emailController.text,
+            phoneNumber: _phoneNumberController.text,
+            isDeleted: false,
+            password: _passwordController.text,
+          );
+
+          await UserRepository().createUser(localUser);
+        }
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => HomeScreen()),
           );
-        }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.toString())),
@@ -58,6 +70,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       }
     }
   }
+
 
   @override
   void initState() {
