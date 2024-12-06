@@ -1,3 +1,5 @@
+import 'package:hedieaty_flutter_application/domain/enums/GiftStatus.dart';
+
 import '../../domain/enums/GiftCategory.dart';
 
 class Gift {
@@ -13,19 +15,18 @@ class Gift {
   bool isDeleted;
   bool isPublished;
 
-  Gift({
-    required this.id,
-    required this.name,
-    required this.giftImagePath,
-    required this.description,
-    required this.category,
-    required this.price,
-    required this.status,
-    required this.eventId,
-    required this.pledged_by_user_id,
-    this.isDeleted = false,
-    this.isPublished = false
-  });
+  Gift(
+      {required this.id,
+      required this.name,
+      required this.giftImagePath,
+      required this.description,
+      required this.category,
+      required this.price,
+      required this.status,
+      required this.eventId,
+      required this.pledged_by_user_id,
+      this.isDeleted = false,
+      this.isPublished = false});
 
   factory Gift.fromMap(Map<String, dynamic> map) {
     return Gift(
@@ -37,7 +38,7 @@ class Gift {
       price: map['price'],
       status: map['status'],
       eventId: map['event_id'],
-      pledged_by_user_id : map['pledged_by_user_id'],
+      pledged_by_user_id: map['pledged_by_user_id'],
       isDeleted: map['isDeleted'] == 0,
       isPublished: map['isPublished'] == 0,
     );
@@ -63,5 +64,11 @@ class Gift {
 
   set giftCategory(GiftCategory category) {
     this.category = category.index;
+  }
+
+  GiftStatus get giftStatus => GiftStatus.values[status];
+
+  set giftStatus(GiftStatus status) {
+    this.status = status.index;
   }
 }

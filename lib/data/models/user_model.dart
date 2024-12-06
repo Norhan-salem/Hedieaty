@@ -1,10 +1,11 @@
 class User {
-  int id;
+  String id;
   String username;
   String email;
   String password;
   String phoneNumber;
   String profileImagePath;
+  bool isDeleted;
 
   User({
     required this.id,
@@ -12,7 +13,8 @@ class User {
     required this.email,
     required this.password,
     required this.phoneNumber,
-    required this.profileImagePath,
+    this.profileImagePath = 'assets/images/profile_mock.png',
+    this.isDeleted = false
   });
 
   factory User.fromMap(Map<String, dynamic> map) {
@@ -23,6 +25,7 @@ class User {
       password: map['password'],
       phoneNumber: map['phone_number'],
       profileImagePath: map['profile_image_path'],
+      isDeleted: map['isDeleted'] == 0
     );
   }
 
@@ -34,6 +37,7 @@ class User {
       'password': password,
       'phone_number': phoneNumber,
       'profile_image_path': profileImagePath,
+      'isDeleted': isDeleted ? 1 : 0
     };
   }
 }
