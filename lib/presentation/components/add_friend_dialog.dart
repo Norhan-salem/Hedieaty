@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
-
 import '../../core/constants/color_palette.dart';
-import 'friend_email_input.dart';
+import '../../core/utils/registration_input_validation.dart';
+import '../../data/repositories/friend_repository.dart';
 
 class FriendFormDialog extends StatefulWidget {
+  final String currentUserId;
+
+  const FriendFormDialog({Key? key, required this.currentUserId}) : super(key: key);
+
   @override
   _FriendFormState createState() => _FriendFormState();
 }
 
 class _FriendFormState extends State<FriendFormDialog> {
   final _formKey = GlobalKey<FormState>();
-  String friendEmail = '';
+  final TextEditingController _emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +25,41 @@ class _FriendFormState extends State<FriendFormDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            FriendEmailInput(onSaved: (value) {
-              friendEmail = value ?? '';
-            }),
+            TextFormField(
+              controller: _emailController,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                labelText: 'Friend Email',
+                labelStyle: TextStyle(color: ColorPalette.darkTeal, fontFamily: 'Poppins'),
+                floatingLabelStyle: TextStyle(color: ColorPalette.darkTeal, fontFamily: 'Poppins'),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: ColorPalette.darkCyan, width: 3),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: ColorPalette.darkTeal, width: 3),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: ColorPalette.darkPink, width: 3),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                errorStyle: TextStyle(
+                  color: ColorPalette.darkPink,
+                  fontFamily: 'Poppins',
+                ),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter an email';
+                }
+                if (!RegistrationInputValidation.isEmailValid(value)) {
+                  return 'Please enter a valid email';
+                }
+                return null;
+              },
+            ),
             SizedBox(height: 16),
             _buildActions(context),
           ],
@@ -38,8 +74,10 @@ class _FriendFormState extends State<FriendFormDialog> {
       children: [
         TextButton(
           style: TextButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8))),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -55,11 +93,26 @@ class _FriendFormState extends State<FriendFormDialog> {
           dimension: 10,
         ),
         ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
             if (_formKey.currentState?.validate() ?? false) {
-              _formKey.currentState?.save();
-              // TODO: Implement logic to add friend with `friendEmail`
-              Navigator.pop(context);
+              String friendEmail = _emailController.text;
+              try {
+                final success = await FriendRepository().addFriendByEmail(
+                  widget.currentUserId,
+                  friendEmail,
+                );
+
+                if (success) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Friend added successfully!')),
+                  );
+                  Navigator.pop(context);
+                }
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(e.toString())),
+                );
+              }
             }
           },
           style: ElevatedButton.styleFrom(
@@ -76,3 +129,4 @@ class _FriendFormState extends State<FriendFormDialog> {
     );
   }
 }
+
