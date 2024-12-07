@@ -1,26 +1,34 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:hedieaty_flutter_application/presentation/components/gift_details_tile.dart';
 import 'package:hedieaty_flutter_application/presentation/components/img_upload.dart';
+import 'package:hedieaty_flutter_application/presentation/components/notif_pref_toggle.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/background_image_container.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/create_event_button.dart';
+import 'package:hedieaty_flutter_application/presentation/widgets/details_input_text_field.dart';
 
 import '../../core/constants/color_palette.dart';
 import '../../core/usecases/build_event_tile.dart';
+import '../../data/models/event_model.dart';
+import '../../data/models/gift_model.dart';
 import '../../data/models/user_model.dart';
+import '../../data/repositories/event_repository.dart';
+import '../../data/repositories/gift_repository.dart';
+import '../../data/repositories/user_repository.dart';
+import '../../data/services/notif_preference_service.dart';
+import '../components/gift_details_tile.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_circle_avatar.dart';
 import 'my_pledged_gifts_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  final User user;
+  final String userId;
   final VoidCallback onManageNotifications;
   final VoidCallback onEditProfile;
 
   ProfileScreen({
     Key? key,
-    required this.user,
+    required this.userId,
     required this.onManageNotifications,
     required this.onEditProfile,
   }) : super(key: key);
@@ -30,19 +38,98 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  File? selectedImage;
+  final EventRepository _eventRepository = EventRepository();
+  final GiftRepository _giftRepository = GiftRepository();
+  final NotifPreferencesService _notifPreferencesService =
+      NotifPreferencesService();
+
   bool _isEditing = false;
+  bool _notificationsEnabled = true;
+  File? selectedImage;
+  List<Event> userEvents = [];
+  Map<int, List<Gift>> eventGifts = {};
 
   late TextEditingController _nameController;
   late TextEditingController _emailController;
   late TextEditingController _phoneController;
 
+  String? _profileImgPath;
+
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.user.userName);
-    _emailController = TextEditingController(text: widget.user.email);
-    _phoneController = TextEditingController(text: widget.user.phoneNumber);
+    _nameController = TextEditingController();
+    _emailController = TextEditingController();
+    _phoneController = TextEditingController();
+    _initializeProfile();
+  }
+
+  Future<void> _initializeProfile() async {
+    await _fetchUserDetails();
+    await _fetchUserEventsAndGifts();
+    await _loadNotificationPreference();
+  }
+
+  Future<void> _updateProfileField(String field, dynamic newValue) async {
+    try {
+      await UserRepository().updateUserField(widget.userId, field, newValue);
+    } catch (e) {
+      print('Error updating $field: $e');
+    }
+  }
+
+  Future<void> _fetchUserDetails() async {
+    try {
+      User? currentUser = await UserRepository().fetchCurrentUser();
+      if (currentUser != null) {
+        setState(() {
+          _nameController.text = currentUser.username;
+          _emailController.text = currentUser.email;
+          _phoneController.text = currentUser.phoneNumber;
+          _profileImgPath = currentUser.profileImagePath;
+        });
+      }
+    } catch (e) {
+      print('Error fetching user details: $e');
+    }
+  }
+
+  Future<void> _fetchUserEventsAndGifts() async {
+    try {
+      List<Event> events =
+          await _eventRepository.fetchUserEvents(widget.userId);
+      Map<int, List<Gift>> giftsMap = {};
+      for (Event event in events) {
+        List<Gift> gifts = await _giftRepository.fetchGiftsByEventId(event.id!);
+        giftsMap[event.id!] = gifts;
+      }
+      setState(() {
+        userEvents = events;
+        eventGifts = giftsMap;
+      });
+    } catch (e) {
+      print('Error fetching user events or gifts: $e');
+    }
+  }
+
+  Future<void> _loadNotificationPreference() async {
+    bool isEnabled = await _notifPreferencesService.getNotificationPreference();
+    setState(() {
+      _notificationsEnabled = isEnabled;
+    });
+  }
+
+  void _toggleEdit() {
+    setState(() {
+      _isEditing = !_isEditing;
+    });
+  }
+
+  void _toggleNotifications(bool value) {
+    setState(() {
+      _notificationsEnabled = value;
+    });
+    _notifPreferencesService.setNotificationPreference(value);
   }
 
   @override
@@ -51,12 +138,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _emailController.dispose();
     _phoneController.dispose();
     super.dispose();
-  }
-
-  void _toggleEdit() {
-    setState(() {
-      _isEditing = !_isEditing;
-    });
   }
 
   @override
@@ -83,24 +164,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           });
                         },
                       ),
-                      // m7tageen yt8yyro tb3n
-                      TextField(
-                        controller: _nameController,
-                        decoration: InputDecoration(labelText: 'Name'),
-                      ),
-                      TextField(
+                      DetailsTextField(
+                          controller: _nameController, labelText: 'Name'),
+                      DetailsTextField(
                         controller: _emailController,
-                        decoration: InputDecoration(labelText: 'Email'),
+                        labelText: 'Email',
                       ),
-                      TextField(
+                      DetailsTextField(
                         controller: _phoneController,
-                        decoration: InputDecoration(labelText: 'Phone Number'),
+                        labelText: 'Phone Number',
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      NotifToggle(
+                        initialStatus: _notificationsEnabled,
+                        onStatusChanged: _toggleNotifications,
                       ),
                     ] else ...[
-                      // profilepic should be changed here as well
-                      CustomCircleAvatar(
-                        imageUrl: 'assets/images/profile_mock.png',
-                      ),
+                      CustomCircleAvatar(imageUrl: _profileImgPath),
                       SizedBox(height: screenHeight * 0.02),
                       GiftDetailsTile(text: _nameController.text),
                       GiftDetailsTile(text: _emailController.text),
@@ -116,9 +198,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         color: ColorPalette.darkTeal,
                       ),
                     ),
-                    ...widget.user.createdEvents
-                        .map((event) => buildEventTile(context, event))
-                        .toList(),
+                    ...userEvents.map((event) {
+                      return BuildEventTile(
+                        event: event,
+                        gifts: eventGifts[event.id] ?? [],
+                      );
+                    }).toList(),
                     SizedBox(height: screenHeight * 0.03),
                     GestureDetector(
                       onTap: () {
@@ -126,20 +211,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => MyPledgedGiftsScreen(
-                              pledgedGifts: [
-                                PledgedGift(
-                                    giftName: 'Book',
-                                    friendName: 'Alice',
-                                    dueDate:
-                                        DateTime.now().add(Duration(days: 7)),
-                                    isPending: true),
-                                PledgedGift(
-                                    giftName: 'Watch',
-                                    friendName: 'Bob',
-                                    dueDate: DateTime.now()
-                                        .subtract(Duration(days: 1)),
-                                    isPending: false),
-                              ],
+                              pledgedGifts: _giftRepository
+                                  .fetchPledgedGiftsByUserId(widget.userId),
                             ),
                           ),
                         );
@@ -176,9 +249,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     SizedBox(height: screenHeight * 0.03),
                     CreateEventButton(
                       buttonText: _isEditing ? 'Save Changes' : 'Edit Profile',
-                      onPressed: () {
+                      onPressed: () async {
                         if (_isEditing) {
                           _toggleEdit();
+                          if (_nameController.text.isNotEmpty) {
+                            await _updateProfileField(
+                                'username', _nameController.text);
+                          }
+                          if (_emailController.text.isNotEmpty) {
+                            await _updateProfileField(
+                                'email', _emailController.text);
+                          }
+                          if (_phoneController.text.isNotEmpty) {
+                            await _updateProfileField(
+                                'phone_number', _phoneController.text);
+                          }
+                          if (selectedImage != null) {
+                            String imagePath = selectedImage!.path;
+                            await _updateProfileField(
+                                'profile_image_path', imagePath);
+                          }
+                          await _notifPreferencesService
+                              .setNotificationPreference(_notificationsEnabled);
                         } else {
                           _toggleEdit();
                         }
