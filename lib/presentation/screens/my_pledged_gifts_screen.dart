@@ -1,44 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:hedieaty_flutter_application/data/repositories/gift_repository.dart';
 import 'package:hedieaty_flutter_application/presentation/components/gift_details_tile.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/background_image_container.dart';
 
 import '../../core/constants/color_palette.dart';
+import '../../data/models/gift_model.dart';
+import '../../data/repositories/event_repository.dart';
 import '../widgets/custom_alert_dialog.dart';
-
-// this will also be changed later :((((((((((
-class PledgedGift {
-  final String giftName;
-  final String friendName;
-  final DateTime dueDate;
-  final bool isPending;
-
-  PledgedGift({
-    required this.giftName,
-    required this.friendName,
-    required this.dueDate,
-    required this.isPending,
-  });
-}
+import '../widgets/custom_app_bar.dart';
 
 class MyPledgedGiftsScreen extends StatelessWidget {
-  final List<PledgedGift> pledgedGifts;
+  final Future<List<Gift>> pledgedGifts;
 
   MyPledgedGiftsScreen({Key? key, required this.pledgedGifts})
       : super(key: key);
 
-  void _showUnpledgeDialog(BuildContext context, PledgedGift gift) {
+  void _showUnpledgeDialog(BuildContext context, Gift gift) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return CustomAlertDialog(
           title: 'Unpledge Gift',
-          content:
-              Text('Are you sure you want to unpledge "${gift.giftName}"?'),
+          content: Text('Are you sure you want to unpledge "${gift.name}"?'),
           actions: [
             TextButton(
               style: TextButton.styleFrom(
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
               onPressed: () {
                 Navigator.pop(context);
@@ -55,11 +44,12 @@ class MyPledgedGiftsScreen extends StatelessWidget {
               style: TextButton.styleFrom(
                 backgroundColor: ColorPalette.darkPink,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 side: BorderSide(color: ColorPalette.darkTeal, width: 3),
               ),
               onPressed: () {
-                // Add logic to unpledge the gift and delete it from list
+                GiftRepository().unpledgeGift(gift.id);
                 Navigator.pop(context);
               },
               child: Text(
@@ -82,40 +72,79 @@ class MyPledgedGiftsScreen extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('My Pledged Gifts'),
+      appBar: CustomAppBar(
+        title: 'My Pledged Gifts',
       ),
-      body: Stack(
-        children: [
-          BackgroundContainer(
-            child: ListView.builder(
-              itemCount: pledgedGifts.length,
-              itemBuilder: (context, index) {
-                PledgedGift gift = pledgedGifts[index];
+      body: FutureBuilder<List<Gift>>(
+        future: pledgedGifts,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No pledged gifts found.'));
+          }
 
-                return GiftDetailsTile(
-                  height: screenHeight * 0.12,
-                  text: '${gift.giftName}\n'
-                      'Pledged to: ${gift.friendName}\n'
-                      'Due Date: ${gift.dueDate.toLocal().toIso8601String().split('T')[0]}',
-                  trailing: gift.isPending
-                      ? IconButton(
-                          iconSize: screenWidth * 0.08,
-                          icon: Icon(Icons.highlight_remove_outlined,
-                              color: ColorPalette.darkPink),
-                          onPressed: () {
-                            if (gift.dueDate.isAfter(DateTime.now())) {
-                              _showUnpledgeDialog(context, gift);
-                            }
-                          },
-                        )
-                      : null,
+          final gifts = snapshot.data!;
+          return BackgroundContainer(
+            child: ListView.builder(
+              itemCount: gifts.length,
+              itemBuilder: (context, index) {
+                final gift = gifts[index];
+                return FutureBuilder<Map<String, dynamic>>(
+                  future: _getGiftDetails(gift),
+                  builder: (context, giftSnapshot) {
+                    if (giftSnapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (giftSnapshot.hasError || !giftSnapshot.hasData) {
+                      return Center(child: Text('Error loading gift details.'));
+                    } else {
+                      final eventOwner = giftSnapshot.data!['owner'] as String;
+                      final eventDate = giftSnapshot.data!['date'] as DateTime?;
+                      final isCloseToEvent =
+                          giftSnapshot.data!['isCloseToEvent'] as bool;
+
+                      return GiftDetailsTile(
+                        height: screenHeight * 0.12,
+                        text: '${gift.name}\n'
+                            'Pledged to: $eventOwner\n'
+                            'Event Date: ${eventDate?.toLocal().toIso8601String().split('T')[0] ?? 'Unknown'}',
+                        trailing: isCloseToEvent
+                            ? IconButton(
+                                iconSize: screenWidth * 0.08,
+                                icon: Icon(
+                                  Icons.highlight_remove_outlined,
+                                  color: ColorPalette.darkPink,
+                                ),
+                                onPressed: () {
+                                  _showUnpledgeDialog(context, gift);
+                                },
+                              )
+                            : null,
+                      );
+                    }
+                  },
                 );
               },
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
+  }
+
+  Future<Map<String, dynamic>> _getGiftDetails(Gift gift) async {
+    final owner =
+        await EventRepository().getEventOwner(gift.eventId) ?? 'Unknown';
+    final date = await EventRepository().getEventDate(gift.eventId);
+    final isCloseToEvent =
+        date != null && date.difference(DateTime.now()).inDays < 3;
+    return {
+      'owner': owner,
+      'date': date,
+      'isCloseToEvent': isCloseToEvent,
+    };
   }
 }
