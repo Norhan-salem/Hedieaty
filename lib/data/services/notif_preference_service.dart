@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class PreferencesService {
+class NotifPreferencesService {
   static const _notificationsKey = 'notifications_enabled';
 
   Future<bool> getNotificationPreference() async {
