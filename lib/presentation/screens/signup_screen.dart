@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/registration_button.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/title_label.dart';
+
 import '../../core/constants/color_palette.dart';
 import '../../core/utils/password_visibility_utils.dart';
 import '../../data/models/user_model.dart';
@@ -12,7 +13,6 @@ import '../widgets/credentials_input_text_field.dart';
 import 'home_screen.dart';
 import 'login_screen.dart';
 
-
 class SignUpScreen extends StatefulWidget {
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
@@ -22,13 +22,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
 
   final PasswordVisibilityController _passwordVisibilityController =
-  PasswordVisibilityController(true);
+      PasswordVisibilityController(true);
   final PasswordVisibilityController _confirmPasswordVisibilityController =
-  PasswordVisibilityController(true);
+      PasswordVisibilityController(true);
 
   final RegistrationState _registrationState = RegistrationState();
   final AuthService _authService = AuthService();
@@ -59,10 +60,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
           await UserRepository().createUser(localUser);
         }
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => HomeScreen()),
-          );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.toString())),
@@ -70,7 +71,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       }
     }
   }
-
 
   @override
   void initState() {
@@ -120,7 +120,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   controller: _phoneNumberController,
                   leadingIcon: Icons.call_outlined,
                   errorText: _registrationState.phoneNumberError,
-                  onChanged: (value) => _registrationState.updatePhoneNumber(value),
+                  onChanged: (value) =>
+                      _registrationState.updatePhoneNumber(value),
                 ),
                 SizedBox(height: 16),
                 InputTextField(
@@ -132,13 +133,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     _passwordVisibilityController.toggleVisibility(() {
                       setState(() {
                         _passwordVisibilityController.obscureText =
-                        !_passwordVisibilityController.obscureText;
+                            !_passwordVisibilityController.obscureText;
                       });
                     });
                   },
                   leadingIcon: Icons.lock_outline,
                   errorText: _registrationState.passwordError,
-                  onChanged: (value) => _registrationState.updatePassword(value),
+                  onChanged: (value) =>
+                      _registrationState.updatePassword(value),
                 ),
                 SizedBox(height: 16),
                 InputTextField(
@@ -150,13 +152,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     _confirmPasswordVisibilityController.toggleVisibility(() {
                       setState(() {
                         _confirmPasswordVisibilityController.obscureText =
-                        !_confirmPasswordVisibilityController.obscureText;
+                            !_confirmPasswordVisibilityController.obscureText;
                       });
                     });
                   },
                   leadingIcon: Icons.lock_outlined,
                   errorText: _registrationState.confirmPasswordError,
-                  onChanged: (value) => _registrationState.updateConfirmPassword(value),
+                  onChanged: (value) =>
+                      _registrationState.updateConfirmPassword(value),
                 ),
                 SizedBox(height: 32),
                 RegistrationButton(
@@ -172,7 +175,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   },
                   child: Text(
                     'Already have an account? Log In',
-                    style: TextStyle(color: ColorPalette.darkCyan, fontFamily: 'Poppins'),
+                    style: TextStyle(
+                        color: ColorPalette.darkCyan, fontFamily: 'Poppins'),
                   ),
                 ),
               ],
@@ -183,8 +187,3 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 }
-
-
-
-
-
