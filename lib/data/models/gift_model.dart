@@ -11,7 +11,7 @@ class Gift {
   double price;
   int status;
   int eventId;
-  int pledged_by_user_id;
+  String pledged_by_user_id;
   bool isDeleted;
   bool isPublished;
 
