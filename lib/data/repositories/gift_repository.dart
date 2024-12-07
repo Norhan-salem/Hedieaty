@@ -83,5 +83,32 @@ class GiftRepository {
 
     return null;
   }
+
+  Future<List<Gift>> fetchGiftsByEventId(int eventId) async {
+    final db = await _sqliteDataSource.database;
+
+    final List<Map<String, dynamic>> result = await db.query(
+      'gifts',
+      where: 'event_id = ? AND isDeleted = 0',
+      whereArgs: [eventId],
+    );
+    return result.isNotEmpty
+        ? result.map((giftMap) => Gift.fromMap(giftMap)).toList()
+        : [];
+  }
+
+  Future<List<Gift>> fetchPledgedGiftsByUserId(String userId) async {
+    final db = await _sqliteDataSource.database;
+
+    final List<Map<String, dynamic>> result = await db.query(
+      'gifts',
+      where: 'pledged_by_user_id = ? AND isDeleted = 0',
+      whereArgs: [userId],
+    );
+    return result.isNotEmpty
+        ? result.map((giftMap) => Gift.fromMap(giftMap)).toList()
+        : [];
+  }
+
 }
 

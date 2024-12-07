@@ -48,6 +48,27 @@ class UserRepository {
     return null;
   }
 
+  Future<User?> fetchUser(String userId) async {
+    try {
+      final db = await _sqliteDataSource.database;
+      final List<Map<String, dynamic>> userMaps = await db.query(
+        'users',
+        where: 'id = ? AND isDeleted = 0',
+        whereArgs: [userId],
+        limit: 1,
+      );
+
+      if (userMaps.isNotEmpty) {
+        return User.fromMap(userMaps.first);
+      }
+      return null;
+    } catch (e) {
+      print('Error fetching user: $e');
+      return null;
+    }
+  }
+
+
   Future<int> updateUserField(String userId, String field, dynamic newValue) async {
     final db = await _sqliteDataSource.database;
     return await db.update(

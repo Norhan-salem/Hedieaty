@@ -1,3 +1,4 @@
+import 'package:hedieaty_flutter_application/data/repositories/user_repository.dart';
 import 'package:sqflite/sqflite.dart';
 import '../datasources/sqlite_datasource.dart';
 import '../models/event_model.dart';
@@ -58,6 +59,53 @@ class EventRepository {
 
     return result.map((map) => Event.fromMap(map)).toList();
   }
+
+  Future<DateTime?> getEventDate(int eventId) async {
+    try {
+      final db = await _sqliteDataSource.database;
+      final result = await db.query(
+        'events',
+        columns: ['date'],
+        where: 'id = ?',
+        whereArgs: [eventId],
+      );
+
+      if (result.isNotEmpty) {
+        return DateTime.parse(result.first['date'] as String);
+      }
+      return null;
+    } catch (e) {
+      print('Error fetching event date: $e');
+      return null;
+    }
+  }
+
+  Future<String?> getEventOwner(int eventId) async {
+    try {
+      final db = await _sqliteDataSource.database;
+      final result = await db.query(
+        'events',
+        columns: ['user_id'],
+        where: 'id = ?',
+        whereArgs: [eventId],
+        limit: 1,
+      );
+
+      if (result.isNotEmpty) {
+        final userId = result.first['user_id'] as String;
+        final user = await UserRepository().fetchUser(userId);
+
+        return user?.username;
+      }
+      return null;
+    } catch (e) {
+      print('Error fetching event owner: $e');
+      return null;
+    }
+  }
+
+
+
 }
 
 
