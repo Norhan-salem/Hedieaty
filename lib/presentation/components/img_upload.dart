@@ -66,8 +66,9 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
           radius: avatarRadius,
           backgroundImage: _selectedImage != null
               ? FileImage(_selectedImage!)
-              : const AssetImage('assets/images/gift_default_img.png')
-                  as ImageProvider,
+              : widget.initialImagePath != null
+              ? FileImage(File(widget.initialImagePath!))
+              : AssetImage('assets/images/default_profile.png') as ImageProvider,
           child: Align(
             alignment: Alignment.bottomRight,
             child: Container(
@@ -98,4 +99,5 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       ),
     );
   }
+
 }
