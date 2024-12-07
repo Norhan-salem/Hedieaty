@@ -1,70 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:hedieaty_flutter_application/data/repositories/user_repository.dart';
 import 'package:hedieaty_flutter_application/presentation/screens/profile_screen.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/background_image_container.dart';
 
 import '../../core/constants/color_palette.dart';
-import '../../data/models/event_model.dart';
-import '../../data/models/gift_model.dart';
-import '../../data/models/user_model.dart';
+import '../../data/services/friends_search.dart';
 import '../components/add_friend_button.dart';
 import '../components/friend_list.dart';
 import '../widgets/create_event_button.dart';
 import '../widgets/custom_app_bar.dart';
 import 'events_list_screen.dart';
 
-final User user = User(
-  userName: 'John Doe',
-  email: 'john.doe@example.com',
-  phoneNumber: '123-456-7890',
-  profileImageURL: 'assets/images/profile_mock.png',
-  createdEvents: [
-    Event(
-      name: 'Birthday Party',
-      category: 'Celebration',
-      status: 'Upcoming',
-      description: 'John’s 30th birthday celebration.',
-      location: '123 Party St, Hometown',
-      date: DateTime(2024, 12, 20),
-      gifts: [
-        Gift(
-          name: 'Gift Card',
-          category: 'Vouchers',
-          status: 'available',
-          price: 50.0,
-          description: 'A 50 Dollar gift card for any store.',
-        ),
-        Gift(
-          name: 'Bluetooth Speaker',
-          category: 'Electronics',
-          status: 'pledged',
-          price: 120.0,
-          description: 'Portable Bluetooth speaker with high-quality sound.',
-        ),
-      ],
-    ),
-    Event(
-      name: 'Christmas Party',
-      category: 'Holiday',
-      status: 'Past',
-      description: 'Annual family Christmas gathering.',
-      location: '456 Celebration Ave, Hometown',
-      date: DateTime(2023, 12, 25),
-      gifts: [
-        Gift(
-          name: 'Scented Candle Set',
-          category: 'Home Decor',
-          status: 'available',
-          price: 30.0,
-          description: 'A set of aromatic candles.',
-          imageURL: 'assets/images/candles.png',
-        ),
-      ],
-    ),
-  ],
-);
-
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  String? _currentUserId;
+  String? _profileImgPath;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCurrentUser();
+  }
+
+  Future<void> _fetchCurrentUser() async {
+    final currentUser = await UserRepository().fetchCurrentUser();
+    setState(() {
+      _currentUserId = currentUser?.id;
+      _profileImgPath = currentUser?.profileImagePath;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,19 +47,25 @@ class HomeScreen extends StatelessWidget {
         title: 'My Friends',
         actionIcon: Icons.search,
         onActionPressed: () {
-          // To-Do: implement search functionality
+          showSearch(
+            context: context,
+            delegate: FriendSearchDelegate(),
+          );
         },
         leadingIcon: GestureDetector(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
+            if (_currentUserId != null) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
                   builder: (context) => ProfileScreen(
-                        user: user,
-                        onEditProfile: () {},
-                        onManageNotifications: () {},
-                      )),
-            );
+                    userId: _currentUserId!,
+                    onEditProfile: () {},
+                    onManageNotifications: () {},
+                  ),
+                ),
+              );
+            }
           },
           child: Container(
             decoration: BoxDecoration(
@@ -98,7 +75,10 @@ class HomeScreen extends StatelessWidget {
             ),
             child: CircleAvatar(
               radius: 40,
-              backgroundImage: AssetImage('assets/images/profile_mock.png'),
+              backgroundImage: _profileImgPath != null
+                  ? NetworkImage(_profileImgPath!)
+                  : AssetImage('assets/images/profile_mock.png')
+                      as ImageProvider,
             ),
           ),
         ),
@@ -115,7 +95,8 @@ class HomeScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => EventsListScreen()),
+                        builder: (context) => EventsListScreen(),
+                      ),
                     );
                   },
                 ),
