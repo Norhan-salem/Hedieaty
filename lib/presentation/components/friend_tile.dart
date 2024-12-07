@@ -3,12 +3,13 @@ import 'package:hedieaty_flutter_application/core/utils/tile_decoration.dart';
 import 'package:hedieaty_flutter_application/presentation/screens/friend_events_list_screen.dart';
 
 import '../../core/constants/color_palette.dart';
-import '../../data/models/friend_model.dart';
+import '../../data/models/user_model.dart';
+import '../../data/services/event_service.dart';
 
 class FriendTile extends StatelessWidget {
-  final Friend friend;
+  final User friend;
 
-  const FriendTile({Key? key, required this.friend}) : super(key: key);
+  FriendTile({Key? key, required this.friend}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +30,10 @@ class FriendTile extends StatelessWidget {
           ),
           leading: CircleAvatar(
             radius: screenWidth * 0.06,
-            backgroundImage: AssetImage(friend.profilePic),
+            backgroundImage: AssetImage(friend.profileImagePath),
           ),
           title: Text(
-            friend.name,
+            friend.username,
             style: TextStyle(
               fontSize: screenWidth * 0.04,
               fontWeight: FontWeight.w600,
@@ -40,29 +41,72 @@ class FriendTile extends StatelessWidget {
               color: ColorPalette.darkTeal,
             ),
           ),
-          subtitle: Text(
-            friend.upcomingEvents > 0
-                ? 'Upcoming Events: ${friend.upcomingEvents}'
-                : 'No Upcoming Events',
-            style: TextStyle(
-              color: friend.upcomingEvents > 0
-                  ? ColorPalette.darkPink
-                  : Colors.grey,
-              fontSize: screenWidth * 0.033,
-              fontFamily: 'Poppins',
-            ),
+          subtitle: FutureBuilder<int>(
+            future: countUpcomingEvents(friend.id),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Text(
+                  'Loading...',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: screenWidth * 0.033,
+                    fontFamily: 'Poppins',
+                  ),
+                );
+              } else if (snapshot.hasError) {
+                return Text(
+                  'Error: ${snapshot.error}',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: screenWidth * 0.033,
+                    fontFamily: 'Poppins',
+                  ),
+                );
+              } else if (snapshot.hasData) {
+                int upcomingEvents = snapshot.data!;
+                return Text(
+                  upcomingEvents > 0
+                      ? 'Upcoming Events: $upcomingEvents'
+                      : 'No Upcoming Events',
+                  style: TextStyle(
+                    color: upcomingEvents > 0
+                        ? ColorPalette.darkPink
+                        : Colors.grey,
+                    fontSize: screenWidth * 0.033,
+                    fontFamily: 'Poppins',
+                  ),
+                );
+              } else {
+                return Text(
+                  'No Upcoming Events',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: screenWidth * 0.033,
+                    fontFamily: 'Poppins',
+                  ),
+                );
+              }
+            },
           ),
-          trailing: friend.upcomingEvents > 0
-              ? _buildEventIndicator(screenWidth)
-              : null,
+          trailing: FutureBuilder<int>(
+            future: countUpcomingEvents(friend.id),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting ||
+                  !snapshot.hasData) {
+                return SizedBox.shrink();
+              }
+              int upcomingEvents = snapshot.data!;
+              return upcomingEvents > 0
+                  ? _buildEventIndicator(screenWidth, upcomingEvents)
+                  : SizedBox.shrink();
+            },
+          ),
           onTap: () {
-            // To-Do: Navigate to friend's gift list screen
             Navigator.push(
               context,
               MaterialPageRoute(
-                // will handle fetching the the gift list by event id later
                 builder: (context) =>
-                    FriendEventsListScreen(friendName: friend.name),
+                    FriendEventsListScreen(friendEvents: [], friendName: friend.username),
               ),
             );
           },
@@ -71,7 +115,7 @@ class FriendTile extends StatelessWidget {
     );
   }
 
-  Widget _buildEventIndicator(double screenWidth) {
+  Widget _buildEventIndicator(double screenWidth, int upcomingEvents) {
     return Container(
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
@@ -79,7 +123,7 @@ class FriendTile extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       child: Text(
-        friend.upcomingEvents.toString(),
+        upcomingEvents.toString(),
         style: TextStyle(
           color: ColorPalette.eggShell,
           fontSize: screenWidth * 0.035,
@@ -89,3 +133,5 @@ class FriendTile extends StatelessWidget {
     );
   }
 }
+
+
