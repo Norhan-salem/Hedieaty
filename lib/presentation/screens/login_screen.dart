@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hedieaty_flutter_application/presentation/screens/signup_screen.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/registration_button.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/title_label.dart';
+
 import '../../core/constants/color_palette.dart';
 import '../../core/utils/password_visibility_utils.dart';
 import '../../data/repositories/user_repository.dart';
@@ -18,7 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final PasswordVisibilityController _passwordVisibilityController =
-  PasswordVisibilityController(true);
+      PasswordVisibilityController(true);
 
   final AuthService _authService = AuthService();
 
@@ -78,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     _passwordVisibilityController.toggleVisibility(() {
                       setState(() {
                         _passwordVisibilityController.obscureText =
-                        !_passwordVisibilityController.obscureText;
+                            !_passwordVisibilityController.obscureText;
                       });
                     });
                   },
@@ -98,7 +99,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   child: Text(
                     'Not registered yet? Sign Up',
-                    style: TextStyle(color: ColorPalette.darkCyan, fontFamily: 'Poppins'),
+                    style: TextStyle(
+                        color: ColorPalette.darkCyan, fontFamily: 'Poppins'),
                   ),
                 ),
               ],
