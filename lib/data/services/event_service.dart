@@ -1,5 +1,6 @@
 import 'package:hedieaty_flutter_application/data/repositories/event_repository.dart';
 
+import '../../domain/enums/EventCategory.dart';
 import '../../domain/enums/EventStatus.dart';
 import '../models/event_model.dart';
 
@@ -30,9 +31,11 @@ String mapEventStatusToString(EventStatus status) {
 }
 
 Future<int> countUpcomingEvents(String userId) async {
-
   List<Event> events = await EventRepository().fetchUserEvents(userId);
   int upcomingEventsCount = events.where((event) => getEventStatus(event) == EventStatus.upcoming).length;
-
   return upcomingEventsCount;
+}
+
+String mapEventCategoryToString(EventCategory category){
+  return category.name[0].toUpperCase() + category.name.substring(1);
 }
