@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:hedieaty_flutter_application/data/services/gift_service.dart';
 import 'package:hedieaty_flutter_application/presentation/components/gift_details_tile.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/background_image_container.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/custom_circle_avatar.dart';
 
 import '../../core/constants/color_palette.dart';
 import '../../data/models/gift_model.dart';
+import '../../domain/enums/GiftCategory.dart';
+import '../../domain/enums/GiftStatus.dart';
 import '../widgets/custom_app_bar.dart';
 
 class GiftDetailsScreen extends StatelessWidget {
@@ -28,19 +31,21 @@ class GiftDetailsScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   CustomCircleAvatar(
-                    imageUrl: gift.imageURL,
+                    imageUrl: gift.giftImagePath,
                   ),
                   SizedBox(height: 16),
                   GiftDetailsTile(text: 'Name: ${gift.name}'),
                   SizedBox(height: 8),
                   GiftDetailsTile(
-                    text: '${gift.description}',
+                    text: 'Description: ${gift.description}',
                     height: screenHeight * 0.25,
                   ),
                   SizedBox(height: 8),
-                  GiftDetailsTile(text: 'Category: ${gift.category}'),
+                  GiftDetailsTile(
+                    text: 'Category: ${mapGiftCategoryToString(GiftCategory.values[gift.category])}',
+                  ),
                   SizedBox(height: 8),
-                  GiftDetailsTile(text: 'Price: ${gift.price} USD'),
+                  GiftDetailsTile(text: 'Price: ${gift.price.toStringAsFixed(2)} USD'),
                   SizedBox(height: 8),
                   Container(
                     height: screenHeight * 0.07,
@@ -51,24 +56,24 @@ class GiftDetailsScreen extends StatelessWidget {
                       color: ColorPalette.eggShell,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                        color: gift.status.toLowerCase() == 'available'
+                        color: gift.giftStatus == GiftStatus.available
                             ? ColorPalette.darkCyan
                             : ColorPalette.darkPink,
                         width: 2,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: gift.status.toLowerCase() == 'available'
-                              ? ColorPalette.darkCyan.withOpacity(1)
-                              : ColorPalette.darkPink.withOpacity(1),
+                          color: gift.giftStatus == GiftStatus.available
+                              ? ColorPalette.darkCyan.withOpacity(0.7)
+                              : ColorPalette.darkPink.withOpacity(0.7),
                           offset: Offset(2, 3),
                         ),
                       ],
                     ),
                     child: Text(
-                      gift.status,
+                      mapGiftStatusToString(gift.giftStatus),
                       style: TextStyle(
-                        color: gift.status.toLowerCase() == 'available'
+                        color: gift.giftStatus == GiftStatus.available
                             ? ColorPalette.darkCyan
                             : ColorPalette.darkPink,
                         fontFamily: 'Poppins',
