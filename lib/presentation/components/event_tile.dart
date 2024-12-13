@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../core/constants/color_palette.dart';
 import '../../core/utils/tile_decoration.dart';
 import '../../data/models/event_model.dart';
+import '../../data/services/event_service.dart';
+import '../../domain/enums/EventCategory.dart';
 
 class EventTile extends StatelessWidget {
   final Event event;
@@ -23,6 +25,8 @@ class EventTile extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
+    final eventStatus = getEventStatus(event);
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -40,7 +44,7 @@ class EventTile extends StatelessWidget {
             ),
           ),
           subtitle: Text(
-            '${event.category} - ${event.status}',
+            '${mapEventCategoryToString(EventCategory.values[event.category])} - ${mapEventStatusToString(eventStatus)}',
             style: TextStyle(
               color: Colors.grey,
               fontFamily: 'Poppins',
@@ -65,4 +69,6 @@ class EventTile extends StatelessWidget {
       ),
     );
   }
+
+
 }
