@@ -19,7 +19,7 @@ class FriendEventList extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) =>
-                  FriendGiftsListScreen(eventName: events[index].name),
+                  FriendGiftsListScreen(event: events[index]),
             ),
           ),
         );
