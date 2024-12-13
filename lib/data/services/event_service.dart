@@ -39,3 +39,13 @@ Future<int> countUpcomingEvents(String userId) async {
 String mapEventCategoryToString(EventCategory category){
   return category.name[0].toUpperCase() + category.name.substring(1);
 }
+
+String formatDate(String dateString) {
+  try {
+    DateTime date = DateTime.parse(dateString);
+    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+  } catch (e) {
+    return 'Invalid date';
+  }
+}
+
