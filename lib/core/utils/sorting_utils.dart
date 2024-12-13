@@ -3,16 +3,18 @@ import '../../data/models/event_model.dart';
 import '../../data/models/gift_model.dart';
 
 void sortItems<T>(
-    List<T> items, String option, ValueNotifier<List<T>> sortedItemsNotifier) {
+    List<T> items,
+    String option,
+    ValueNotifier<List<T>> sortedItemsNotifier
+    ) {
   List<T> sortedItems = List.from(items);
 
   if (T == Event) {
     if (option == 'Name') {
-      sortedItems
-          .sort((a, b) => (a as Event).name.compareTo((b as Event).name));
+      sortedItems.sort((a, b) => (a as Event).name.toLowerCase().compareTo((b as Event).name.toLowerCase()));
     } else if (option == 'Category') {
       sortedItems.sort(
-          (a, b) => (a as Event).category.compareTo((b as Event).category));
+              (a, b) => (a as Event).category.compareTo((b as Event).category));
     } else if (option == 'Status') {
       Map<String, int> statusOrder = {
         'Upcoming': 0,
@@ -24,14 +26,15 @@ void sortItems<T>(
     }
   } else if (T == Gift) {
     if (option == 'Name') {
-      sortedItems.sort((a, b) => (a as Gift).name.compareTo((b as Gift).name));
+      sortedItems.sort((a, b) => (a as Gift).name.toLowerCase().compareTo((b as Gift).name.toLowerCase()));
     } else if (option == 'Category') {
-      sortedItems
-          .sort((a, b) => (a as Gift).category.compareTo((b as Gift).category));
+      sortedItems.sort(
+              (a, b) => (a as Gift).category.compareTo((b as Gift).category));
     } else if (option == 'Status') {
       Map<String, int> statusOrder = {
         'Available': 0,
         'Pledged': 1,
+        'Purchased': 2
       };
       sortedItems.sort((a, b) => statusOrder[(a as Gift).status]!
           .compareTo(statusOrder[(b as Gift).status]!));
