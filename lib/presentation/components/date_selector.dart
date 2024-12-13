@@ -14,7 +14,7 @@ class DateSelector extends StatelessWidget {
 
     double verticalPadding = screenWidth * 0.02;
     double buttonFontSize = screenWidth * 0.04;
-    double textFontSize = screenWidth * 0.04;
+    double textFontSize = screenWidth * 0.03;
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: verticalPadding),
