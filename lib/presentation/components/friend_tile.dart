@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hedieaty_flutter_application/core/utils/tile_decoration.dart';
+import 'package:hedieaty_flutter_application/data/repositories/event_repository.dart';
 import 'package:hedieaty_flutter_application/presentation/screens/friend_events_list_screen.dart';
 
 import '../../core/constants/color_palette.dart';
@@ -101,15 +102,42 @@ class FriendTile extends StatelessWidget {
                   : SizedBox.shrink();
             },
           ),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    FriendEventsListScreen(friendEvents: [], friendName: friend.username),
-              ),
+          onTap: () async {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => Center(child: CircularProgressIndicator()),
             );
+            try {
+              final friendEvents = await EventRepository().fetchUserEvents(friend.id);
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FriendEventsListScreen(
+                    friendEvents: friendEvents,
+                    friendName: friend.username,
+                  ),
+                ),
+              );
+            } catch (error) {
+              Navigator.pop(context);
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('Error'),
+                  content: Text('Failed to fetch events: $error'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text('OK'),
+                    ),
+                  ],
+                ),
+              );
+            }
           },
+
         ),
       ),
     );
