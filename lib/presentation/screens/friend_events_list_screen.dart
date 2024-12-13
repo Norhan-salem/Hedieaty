@@ -7,39 +7,16 @@ import '../components/friend_event_list.dart';
 import '../widgets/custom_app_bar.dart';
 
 class FriendEventsListScreen extends StatelessWidget {
+  final List<Event> friendEvents;
   final String friendName;
 
-  FriendEventsListScreen({required this.friendName, Key? key})
+  FriendEventsListScreen({Key? key, required this.friendEvents, required this.friendName})
       : super(key: key);
-
-  List<Event> events = [
-    Event(
-        name: 'Birthday Party',
-        category: 'Celebration',
-        status: 'Upcoming',
-        description: '',
-        location: '',
-        date: DateTime.utc(1989, 11, 9)),
-    Event(
-        name: 'Meeting',
-        category: 'Work',
-        status: 'Current',
-        description: '',
-        location: '',
-        date: DateTime.utc(1989, 11, 9)),
-    Event(
-        name: 'Concert',
-        category: 'Entertainment',
-        status: 'Past',
-        description: '',
-        location: '',
-        date: DateTime.utc(1989, 11, 9))
-  ];
 
   @override
   Widget build(BuildContext context) {
     ValueNotifier<List<Event>> sortedEventsNotifier =
-        ValueNotifier<List<Event>>(events);
+        ValueNotifier<List<Event>>(friendEvents);
 
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;

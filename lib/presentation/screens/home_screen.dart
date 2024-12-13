@@ -4,6 +4,7 @@ import 'package:hedieaty_flutter_application/presentation/screens/profile_screen
 import 'package:hedieaty_flutter_application/presentation/widgets/background_image_container.dart';
 
 import '../../core/constants/color_palette.dart';
+import '../../data/repositories/event_repository.dart';
 import '../../data/services/friends_search.dart';
 import '../components/add_friend_button.dart';
 import '../components/friend_list.dart';
@@ -91,13 +92,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(height: appBarPadding),
                 CreateEventButton(
                   buttonText: 'Create Your Own Event',
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EventsListScreen(),
-                      ),
-                    );
+                  onPressed: () async {
+                    if (_currentUserId != null) {
+                      final userEvents = await EventRepository().fetchUserEvents(_currentUserId!);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EventsListScreen(
+                            userId: _currentUserId!,
+                            initialEvents: userEvents,
+                          ),
+                        ),
+                      );
+                    }
                   },
                 ),
                 SizedBox(height: appBarPadding),

@@ -8,54 +8,36 @@ import '../widgets/custom_app_bar.dart';
 import 'add_edit_event_screen.dart';
 
 class EventsListScreen extends StatefulWidget {
-  const EventsListScreen({Key? key}) : super(key: key);
+  final String userId;
+  final List<Event> initialEvents;
+
+  const EventsListScreen({
+    Key? key,
+    required this.userId,
+    required this.initialEvents,
+  }) : super(key: key);
 
   @override
   _EventsListScreenState createState() => _EventsListScreenState();
 }
 
 class _EventsListScreenState extends State<EventsListScreen> {
-  List<Event> events = [
-    Event(
-      name: 'Birthday Party',
-      category: 'Celebration',
-      status: 'Upcoming',
-      description: 'a',
-      location: 'a',
-      date: DateTime.utc(1989, 11, 9),
-    ),
-    Event(
-      name: 'Meeting',
-      category: 'Work',
-      status: 'Current',
-      description: 'a',
-      location: 'a',
-      date: DateTime.utc(1989, 11, 9),
-    ),
-    Event(
-      name: 'Concert',
-      category: 'Entertainment',
-      status: 'Past',
-      description: 'a',
-      location: 'a',
-      date: DateTime.utc(1989, 11, 9),
-    ),
-  ];
-
-  ValueNotifier<List<Event>> sortedMyEventsNotifier =
-  ValueNotifier<List<Event>>([]);
+  late ValueNotifier<List<Event>> sortedMyEventsNotifier;
 
   @override
   void initState() {
     super.initState();
-    sortedMyEventsNotifier.value = events;
+    sortedMyEventsNotifier = ValueNotifier<List<Event>>(widget.initialEvents);
+  }
+
+  @override
+  void dispose() {
+    sortedMyEventsNotifier.dispose();
+    super.dispose();
   }
 
   void _addEvent(Event newEvent) {
-    setState(() {
-      events.add(newEvent);
-      sortedMyEventsNotifier.value = List.from(events);
-    });
+    sortedMyEventsNotifier.value = [...sortedMyEventsNotifier.value, newEvent];
   }
 
   @override
@@ -118,4 +100,3 @@ class _EventsListScreenState extends State<EventsListScreen> {
     );
   }
 }
-

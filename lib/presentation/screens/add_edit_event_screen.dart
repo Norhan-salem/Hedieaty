@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:hedieaty_flutter_application/data/repositories/user_repository.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/background_image_container.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/create_event_button.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/custom_app_bar.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/details_input_text_field.dart';
 
 import '../../data/models/event_model.dart';
+import '../../data/repositories/event_repository.dart';
+import '../../data/services/event_service.dart';
+import '../../domain/enums/EventCategory.dart';
 import '../components/custom_dropdown_list.dart';
 import '../components/date_selector.dart';
 
@@ -23,7 +27,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
   late TextEditingController descriptionController;
   late TextEditingController locationController;
   late ValueNotifier<DateTime?> selectedDateNotifier;
-  String? category;
+  EventCategory? category;
 
   @override
   void initState() {
@@ -34,8 +38,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
         TextEditingController(text: widget.event?.description ?? '');
     locationController =
         TextEditingController(text: widget.event?.location ?? '');
-    selectedDateNotifier = ValueNotifier(widget.event?.date);
-    category = widget.event?.category;
+    selectedDateNotifier = ValueNotifier(
+      widget.event != null ? DateTime.parse(widget.event!.date) : null,
+    );
+    category = widget.event != null
+        ? EventCategory.values[widget.event!.category]
+        : null;
   }
 
   @override
@@ -47,6 +55,58 @@ class _AddEventScreenState extends State<AddEventScreen> {
     super.dispose();
   }
 
+Future<void> saveEvent() async {
+    if (_addEventFormKey.currentState!.validate()) {
+      try {
+        final currentUser = await UserRepository().fetchCurrentUser();
+        if (currentUser == null) {
+          throw Exception("No logged-in user found");
+        }
+
+        final newEvent = Event(
+          id: widget.event?.id ?? generateUniqueId(),
+          name: nameController.text.trim(),
+          description: descriptionController.text.trim(),
+          location: locationController.text.trim(),
+          date: (selectedDateNotifier.value ?? DateTime.now().add(Duration(days: 1)))
+              .toIso8601String(),
+          category: category?.index ?? 0,
+          userId: currentUser.id,
+          isDeleted: widget.event?.isDeleted ?? false,
+        );
+
+        if (widget.event == null) {
+          await EventRepository().createEvent(newEvent);
+        } else {
+          final updateFields = {
+            'name': newEvent.name,
+            'description': newEvent.description,
+            'location': newEvent.location,
+            'date': newEvent.date,
+            'category': newEvent.category,
+          };
+          await EventRepository().updateEvent(newEvent.id, updateFields);
+        }
+
+        Navigator.pop(context, newEvent);
+      } catch (e) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Error'),
+            content: Text('Failed to save the event. Please try again.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
@@ -55,7 +115,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
     return Scaffold(
       appBar: CustomAppBar(
-          title: widget.event == null ? 'Add Event' : 'Edit Event'),
+        title: widget.event == null ? 'Add Event' : 'Edit Event',
+      ),
       body: Stack(
         children: [
           BackgroundContainer(
@@ -79,41 +140,23 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         labelText: 'Location',
                       ),
                       CustomDropdownButton(
-                        category: category,
-                        items: [
-                          'Celebration',
-                          'Work',
-                          'Entertainment',
-                          'Other'
-                        ],
+                        category: category != null ? mapEventCategoryToString(category!) : null,
+                        items: EventCategory.values.map((e) => mapEventCategoryToString(e)).toList(),
                         onChanged: (value) {
                           setState(() {
-                            category = value;
+                            category = EventCategory.values.firstWhere(
+                                  (e) => mapEventCategoryToString(e) == value,
+                            );
                           });
                         },
-                        validator: (value) =>
-                            value == null ? 'Select a category' : null,
+                        validator: (value) => value == null ? 'Select a category' : null,
                       ),
                       DateSelector(selectedDateNotifier: selectedDateNotifier),
                       SizedBox(height: screenHeight * 0.02),
                       CreateEventButton(
-                        onPressed: () {
-                          if (_addEventFormKey.currentState!.validate()) {
-                            final newEvent = Event(
-                              name: nameController.text,
-                              description: descriptionController.text,
-                              category: category ?? 'Other',
-                              location: locationController.text,
-                              date: selectedDateNotifier.value ??
-                                  DateTime.now().add(Duration(days: 1)),
-                              status: 'Upcoming',
-                            );
-
-                            Navigator.pop(context, newEvent);
-                          }
-                        },
+                        onPressed: saveEvent,
                         buttonText:
-                            widget.event == null ? 'Add Event' : 'Save Changes',
+                        widget.event == null ? 'Add Event' : 'Save Changes',
                       ),
                     ],
                   ),
@@ -125,4 +168,13 @@ class _AddEventScreenState extends State<AddEventScreen> {
       ),
     );
   }
+
+  int generateUniqueId() {
+    return DateTime.now().millisecondsSinceEpoch;
+  }
+}
+
+extension StringExtensions on String {
+  String capitalize() =>
+      this.isNotEmpty ? '${this[0].toUpperCase()}${this.substring(1)}' : this;
 }
