@@ -33,7 +33,7 @@ class FriendEventTile extends StatelessWidget {
                 TextStyle(color: ColorPalette.darkTeal, fontFamily: 'Poppins'),
           ),
           subtitle: Text(
-            '${mapEventCategoryToString(EventCategory.values[event.category])} - ${event.date}',
+            '${mapEventCategoryToString(EventCategory.values[event.category])} - ${formatDate(event.date)}',
             style: TextStyle(color: Colors.grey, fontFamily: 'Poppins'),
           ),
         ),
