@@ -8,53 +8,19 @@ import '../widgets/create_event_button.dart';
 import '../widgets/custom_app_bar.dart';
 import 'add_edit_gift_screen.dart';
 
-class GiftsListScreen extends StatefulWidget {
-  const GiftsListScreen({Key? key}) : super(key: key);
+class GiftsListScreen extends StatelessWidget {
+  final int eventId;
+  final List<Gift> gifts;
 
-  @override
-  _GiftsListScreenState createState() => _GiftsListScreenState();
-}
-
-class _GiftsListScreenState extends State<GiftsListScreen> {
-  final List<Gift> gifts = [
-    Gift(
-        name: 'Smartphone',
-        category: 'Electronics',
-        status: 'Available',
-        price: 30.0,
-        description: ''),
-    Gift(
-        name: 'Book',
-        category: 'Education',
-        status: 'Pledged',
-        price: 30.0,
-        description: ''),
-    Gift(
-        name: 'Headphones',
-        category: 'Electronics',
-        status: 'Available',
-        price: 30.0,
-        description: ''),
-  ];
-
-  ValueNotifier<List<Gift>> sortedMyGiftsNotifier =
-      ValueNotifier<List<Gift>>([]);
-
-  @override
-  void initState() {
-    super.initState();
-    sortedMyGiftsNotifier.value = gifts;
-  }
-
-  void _addGift(Gift newGift) {
-    setState(() {
-      gifts.add(newGift);
-      sortedMyGiftsNotifier.value = List.from(gifts);
-    });
-  }
+  GiftsListScreen({Key? key, required this.gifts, required this.eventId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    ValueNotifier<List<Gift>> sortedMyGiftsNotifier = ValueNotifier<List<Gift>>(gifts);
+
+    void _addGift(Gift newGift) {
+      sortedMyGiftsNotifier.value = List.from(sortedMyGiftsNotifier.value)..add(newGift);
+    }
 
     double appBarPadding = MediaQuery.of(context).size.height * 0.02;
 
@@ -79,7 +45,7 @@ class _GiftsListScreenState extends State<GiftsListScreen> {
                   Navigator.push<Gift>(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AddGiftScreen(),
+                      builder: (context) => AddGiftScreen(eventId: eventId),
                     ),
                   ).then((newGift) {
                     if (newGift != null) {
@@ -91,15 +57,15 @@ class _GiftsListScreenState extends State<GiftsListScreen> {
               SizedBox(height: appBarPadding),
               Expanded(
                 child: ValueListenableBuilder<List<Gift>>(
-                    valueListenable: sortedMyGiftsNotifier,
-                    builder: (context, sortedMyGifts, child) {
-                      return GiftList(
-                        myGifts: sortedMyGifts,
-                        onGiftAdded: (Gift newGift) {
-                          _addGift(newGift);
-                        },
-                      );
-                    }),
+                  valueListenable: sortedMyGiftsNotifier,
+                  builder: (context, sortedMyGifts, child) {
+                    return GiftList(
+                      eventId: eventId,
+                      myGifts: sortedMyGifts,
+                      onGiftAdded: _addGift,
+                    );
+                  },
+                ),
               ),
             ],
           ),
