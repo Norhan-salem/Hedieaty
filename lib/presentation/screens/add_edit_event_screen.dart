@@ -32,7 +32,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
   @override
   void initState() {
     super.initState();
-
     nameController = TextEditingController(text: widget.event?.name ?? '');
     descriptionController =
         TextEditingController(text: widget.event?.description ?? '');
@@ -41,9 +40,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
     selectedDateNotifier = ValueNotifier(
       widget.event != null ? DateTime.parse(widget.event!.date) : null,
     );
-    category = widget.event != null
-        ? EventCategory.values[widget.event!.category]
-        : null;
   }
 
   @override
@@ -55,7 +51,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
     super.dispose();
   }
 
-Future<void> saveEvent() async {
+  Future<void> saveEvent() async {
     if (_addEventFormKey.currentState!.validate()) {
       try {
         final currentUser = await UserRepository().fetchCurrentUser();
@@ -68,13 +64,13 @@ Future<void> saveEvent() async {
           name: nameController.text.trim(),
           description: descriptionController.text.trim(),
           location: locationController.text.trim(),
-          date: (selectedDateNotifier.value ?? DateTime.now().add(Duration(days: 1)))
+          date: (selectedDateNotifier.value ??
+                  DateTime.now().add(Duration(days: 1)))
               .toIso8601String(),
           category: category?.index ?? 0,
           userId: currentUser.id,
           isDeleted: widget.event?.isDeleted ?? false,
         );
-
         if (widget.event == null) {
           await EventRepository().createEvent(newEvent);
         } else {
@@ -87,7 +83,6 @@ Future<void> saveEvent() async {
           };
           await EventRepository().updateEvent(newEvent.id, updateFields);
         }
-
         Navigator.pop(context, newEvent);
       } catch (e) {
         showDialog(
@@ -140,23 +135,28 @@ Future<void> saveEvent() async {
                         labelText: 'Location',
                       ),
                       CustomDropdownButton(
-                        category: category != null ? mapEventCategoryToString(category!) : null,
-                        items: EventCategory.values.map((e) => mapEventCategoryToString(e)).toList(),
+                        category: category != null
+                            ? mapEventCategoryToString(category!)
+                            : null,
+                        items: EventCategory.values
+                            .map((e) => mapEventCategoryToString(e))
+                            .toList(),
                         onChanged: (value) {
                           setState(() {
                             category = EventCategory.values.firstWhere(
-                                  (e) => mapEventCategoryToString(e) == value,
+                              (e) => mapEventCategoryToString(e) == value,
                             );
                           });
                         },
-                        validator: (value) => value == null ? 'Select a category' : null,
+                        validator: (value) =>
+                            value == null ? 'Select a category' : null,
                       ),
                       DateSelector(selectedDateNotifier: selectedDateNotifier),
                       SizedBox(height: screenHeight * 0.02),
                       CreateEventButton(
                         onPressed: saveEvent,
                         buttonText:
-                        widget.event == null ? 'Add Event' : 'Save Changes',
+                            widget.event == null ? 'Add Event' : 'Save Changes',
                       ),
                     ],
                   ),
