@@ -39,9 +39,9 @@ class CustomDropdownButton extends StatelessWidget {
             filled: true,
             fillColor: ColorPalette.eggShell,
             labelStyle:
-                TextStyle(fontFamily: 'Poppins', color: ColorPalette.darkTeal),
+            TextStyle(fontFamily: 'Poppins', color: ColorPalette.darkTeal),
             floatingLabelStyle:
-                TextStyle(fontFamily: 'Poppins', color: ColorPalette.darkTeal),
+            TextStyle(fontFamily: 'Poppins', color: ColorPalette.darkTeal),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(color: ColorPalette.darkCyan, width: 3),
@@ -65,20 +65,20 @@ class CustomDropdownButton extends StatelessWidget {
           ),
           items: items
               .map((cat) => DropdownMenuItem(
-                    value: cat,
-                    child: Text(
-                      cat,
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        color: ColorPalette.darkTeal,
-                        fontSize: dropdownFontSize,
-                      ),
-                    ),
-                  ))
+            value: cat,
+            child: Text(
+              cat,
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                color: ColorPalette.darkTeal,
+                fontSize: dropdownFontSize,
+              ),
+            ),
+          ))
               .toList(),
           onChanged: onChanged,
           validator: validator ??
-              (value) => value == null ? 'Select a category' : null,
+                  (value) => value == null ? 'Select a category' : null,
           dropdownColor: ColorPalette.eggShell,
         ),
       ),
