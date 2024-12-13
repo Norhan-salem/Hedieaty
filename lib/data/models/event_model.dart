@@ -7,7 +7,7 @@ class Event {
   String location;
   String description;
   int category;
-  int userId;
+  String userId;
   bool isDeleted;
 
   Event({
