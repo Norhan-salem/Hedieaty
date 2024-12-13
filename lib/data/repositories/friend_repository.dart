@@ -1,9 +1,6 @@
-import 'package:sqflite/sqflite.dart';
-
 import '../datasources/sqlite_datasource.dart';
 import '../models/friend_model.dart';
 import '../models/user_model.dart';
-
 
 class FriendRepository {
   final SqliteDataSource _sqliteDataSource = SqliteDataSource();
@@ -18,16 +15,20 @@ class FriendRepository {
 
     if (result.isNotEmpty) {
       final friendId = result.first['id'];
-      final existingFriend = await db.query(
+      final existingFriendship = await db.query(
         'friends',
-        where: 'user_id = ? AND friend_id = ?',
-        whereArgs: [userId, friendId],
+        where: '(user_id = ? AND friend_id = ?) OR (user_id = ? AND friend_id = ?)',
+        whereArgs: [userId, friendId, friendId, userId],
       );
 
-      if (existingFriend.isEmpty) {
+      if (existingFriendship.isEmpty) {
         await db.insert(
           'friends',
           Friend(userId: userId, friendId: friendId).toMap(),
+        );
+        await db.insert(
+          'friends',
+          Friend(userId: friendId, friendId: userId).toMap(),
         );
         return true;
       } else {
@@ -37,6 +38,7 @@ class FriendRepository {
       throw Exception("User with email $friendEmail does not exist.");
     }
   }
+
 
   Future<List<User>> searchForFriend(String query) async {
     final db = await _sqliteDataSource.database;
