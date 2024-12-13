@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hedieaty_flutter_application/core/constants/color_palette.dart';
+import 'package:hedieaty_flutter_application/data/services/gift_service.dart';
+import 'package:hedieaty_flutter_application/domain/enums/GiftStatus.dart';
 
 class GiftStatusToggle extends StatefulWidget {
-  final String initialStatus;
-  final Function(String) onStatusChanged;
+  final GiftStatus initialStatus;
+  final Function(GiftStatus) onStatusChanged;
 
   GiftStatusToggle({
     Key? key,
@@ -16,7 +18,7 @@ class GiftStatusToggle extends StatefulWidget {
 }
 
 class _GiftStatusToggleState extends State<GiftStatusToggle> {
-  late String _currentStatus;
+  late GiftStatus _currentStatus;
 
   @override
   void initState() {
@@ -26,7 +28,7 @@ class _GiftStatusToggleState extends State<GiftStatusToggle> {
 
   void _toggleStatus() {
     setState(() {
-      _currentStatus = _currentStatus == 'Available' ? 'Pledged' : 'Available';
+      _currentStatus = _currentStatus == GiftStatus.available ? GiftStatus.pledged : GiftStatus.available;
       widget.onStatusChanged(_currentStatus);
     });
   }
@@ -57,7 +59,7 @@ class _GiftStatusToggleState extends State<GiftStatusToggle> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Text(
-            'Status: $_currentStatus',
+            'Status: ${mapGiftStatusToString(_currentStatus)}',
             style: TextStyle(
               color: ColorPalette.darkCyan,
               fontFamily: 'Poppins',
@@ -69,7 +71,7 @@ class _GiftStatusToggleState extends State<GiftStatusToggle> {
             inactiveThumbColor: ColorPalette.darkCyan,
             activeTrackColor: ColorPalette.darkCyan,
             inactiveTrackColor: ColorPalette.eggShell,
-            value: _currentStatus == 'Pledged',
+            value: _currentStatus == GiftStatus.pledged,
             onChanged: (value) => _toggleStatus(),
           ),
         ],
