@@ -3,6 +3,9 @@ import 'package:hedieaty_flutter_application/core/utils/tile_decoration.dart';
 
 import '../../core/constants/color_palette.dart';
 import '../../data/models/gift_model.dart';
+import '../../data/services/gift_service.dart';
+import '../../domain/enums/GiftCategory.dart';
+import '../../domain/enums/GiftStatus.dart';
 import '../screens/gift_details_screen.dart';
 
 class GiftTile extends StatelessWidget {
@@ -30,7 +33,7 @@ class GiftTile extends StatelessWidget {
       decoration: TileDecoration.tileBorder(),
       child: Card(
         margin: EdgeInsets.zero,
-        color: gift.status.toLowerCase() == 'pledged'
+        color: gift.status == 1
             ? ColorPalette.yellowHighlight
             : ColorPalette.eggShell,
         child: GestureDetector(
@@ -49,7 +52,7 @@ class GiftTile extends StatelessWidget {
                   color: ColorPalette.darkTeal, fontFamily: 'Poppins'),
             ),
             subtitle: Text(
-              '${gift.category} - ${gift.status}',
+              '${mapGiftCategoryToString(GiftCategory.values[gift.category])} - ${mapGiftStatusToString(GiftStatus.values[gift.status])}',
               style: TextStyle(color: Colors.grey, fontFamily: 'Poppins'),
             ),
             trailing: Theme(
@@ -76,7 +79,7 @@ class GiftTile extends StatelessWidget {
                 itemBuilder: (context) {
                   List<PopupMenuEntry<String>> options = [];
 
-                  if (gift.status.toLowerCase() != 'pledged') {
+                  if (gift.status!= 1) {
                     options.add(
                       const PopupMenuItem(
                         value: 'edit',
