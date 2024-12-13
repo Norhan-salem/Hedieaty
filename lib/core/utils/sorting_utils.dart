@@ -19,8 +19,8 @@ void sortItems<T>(
         'Current': 1,
         'Past': 2,
       };
-      sortedItems.sort((a, b) => statusOrder[(a as Event).status]!
-          .compareTo(statusOrder[(b as Event).status]!));
+      sortedItems.sort((a, b) => statusOrder[(a as Event).date]!
+          .compareTo(statusOrder[(b as Event).date]!));
     }
   } else if (T == Gift) {
     if (option == 'Name') {
