@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:hedieaty_flutter_application/data/services/gift_service.dart';
 
 import '../../core/constants/color_palette.dart';
 import '../../core/utils/tile_decoration.dart';
 import '../../data/models/gift_model.dart';
+import '../../domain/enums/GiftCategory.dart';
+import '../../domain/enums/GiftStatus.dart';
 import '../../domain/managers/gift_pledge_manager.dart';
 import '../screens/gift_details_screen.dart';
 import '../widgets/custom_alert_dialog.dart';
@@ -42,7 +45,7 @@ class _FriendGiftTileState extends State<FriendGiftTile> {
             title: Text(widget.gift.name,
                 style: TextStyle(
                     color: ColorPalette.darkTeal, fontFamily: 'Poppins')),
-            subtitle: Text('${widget.gift.category} - ${widget.gift.status}',
+            subtitle: Text('${mapGiftCategoryToString(GiftCategory.values[widget.gift.category])} - ${mapGiftStatusToString(GiftStatus.values[widget.gift.status])}',
                 style: TextStyle(color: Colors.grey, fontFamily: 'Poppins')),
           ),
         ),
