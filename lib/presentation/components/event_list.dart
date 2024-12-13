@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hedieaty_flutter_application/data/repositories/gift_repository.dart';
 import 'package:hedieaty_flutter_application/presentation/screens/gifts_list_screen.dart';
 
 import '../../data/models/event_model.dart';
@@ -10,8 +11,7 @@ class EventList extends StatefulWidget {
   final List<Event> events;
   final Function(Event) onEventAdded;
 
-  const EventList(
-      {super.key, required this.events, required this.onEventAdded});
+  const EventList({super.key, required this.events, required this.onEventAdded});
 
   @override
   _EventListState createState() => _EventListState();
@@ -26,7 +26,7 @@ class _EventListState extends State<EventList> {
       if (eventId != null) {
         await _eventRepository.deleteEvent(eventId);
         setState(() {
-          widget.events.removeAt(index); // Remove event from the list
+          widget.events.removeAt(index);
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Event deleted successfully!')),
@@ -46,11 +46,11 @@ class _EventListState extends State<EventList> {
       final eventId = widget.events[index].id;
       if (eventId != null) {
         final updatedFields = updatedEvent.toMap();
-        updatedFields.remove('id'); // Ensure 'id' is not updated
+        updatedFields.remove('id');
         await _eventRepository.updateEvent(eventId, updatedFields);
 
         setState(() {
-          widget.events[index] = updatedEvent; // Update event in the list
+          widget.events[index] = updatedEvent;
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -75,15 +75,29 @@ class _EventListState extends State<EventList> {
         return EventTile(
           event: event,
           onDelete: () {
-            _deleteEvent(index); // Handle delete
+            _deleteEvent(index);
           },
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => GiftsListScreen(),
-              ),
-            );
+          onTap: () async {
+            try {
+              final gifts = await GiftRepository().fetchGiftsByEventId(event.id);
+              print('Fetched ${gifts.length} gifts');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => GiftsListScreen(
+                    eventId: event.id,
+                    gifts: gifts,
+                  ),
+                ),
+              );
+            } catch (e) {
+              print('Error fetching gifts: $e');
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Failed to load gifts: ${e.toString()}'),
+                ),
+              );
+            }
           },
           onEdit: () {
             Navigator.push<Event>(
@@ -93,7 +107,7 @@ class _EventListState extends State<EventList> {
               ),
             ).then((updatedEvent) {
               if (updatedEvent != null) {
-                _updateEvent(index, updatedEvent); // Handle update
+                _updateEvent(index, updatedEvent);
               }
             });
           },
