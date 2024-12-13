@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../core/utils/tile_decoration.dart';
 import '../../data/models/event_model.dart';
 import '../../core/constants/color_palette.dart';
+import '../../data/services/event_service.dart';
+import '../../domain/enums/EventCategory.dart';
 
 class FriendEventTile extends StatelessWidget {
   final Event event;
@@ -31,7 +33,7 @@ class FriendEventTile extends StatelessWidget {
                 TextStyle(color: ColorPalette.darkTeal, fontFamily: 'Poppins'),
           ),
           subtitle: Text(
-            '${event.category} - ${event.date}',
+            '${mapEventCategoryToString(EventCategory.values[event.category])} - ${event.date}',
             style: TextStyle(color: Colors.grey, fontFamily: 'Poppins'),
           ),
         ),
