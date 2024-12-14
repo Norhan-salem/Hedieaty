@@ -6,6 +6,7 @@ import 'package:hedieaty_flutter_application/presentation/widgets/create_event_b
 import 'package:hedieaty_flutter_application/presentation/widgets/custom_app_bar.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/details_input_text_field.dart';
 
+import '../../data/datasources/firebase_datasource.dart';
 import '../../data/models/gift_model.dart';
 import '../../data/repositories/gift_repository.dart';
 import '../../data/services/gift_service.dart';
@@ -58,6 +59,73 @@ class _AddGiftScreenState extends State<AddGiftScreen> {
     descriptionController.dispose();
     priceController.dispose();
     super.dispose();
+  }
+
+  Future<void> publishGift() async {
+    try {
+      if (_addGiftFormKey.currentState!.validate()) {
+        final newGift = Gift(
+          id: widget.gift?.id ?? generateUniqueId(),
+          name: nameController.text,
+          giftImagePath: selectedImage?.path ??
+              widget.gift?.giftImagePath ?? 'assets/images/gift_default_img.png',
+          description: descriptionController.text,
+          category: category?.index ?? 0,
+          price: double.parse(priceController.text),
+          status: giftStatus?.index ?? 0,
+          eventId: widget.eventId,
+          pledged_by_user_id: widget.gift?.pledged_by_user_id ?? '',
+          isDeleted: widget.gift?.isDeleted ?? false,
+          isPublished: true,
+        );
+
+        if (widget.gift == null) {
+          await GiftRepository().createGift(newGift);
+        } else {
+          final updateFields = {
+            'name': newGift.name,
+            'description': newGift.description,
+            'price': newGift.price,
+            'category': newGift.category,
+            'status': newGift.status,
+            'pledged_by_user_id': newGift.pledged_by_user_id,
+            'isPublished': true,
+            'gift_image_path': newGift.giftImagePath,
+          };
+          await GiftRepository().updateGift(newGift.id, updateFields);
+        }
+
+        await FirebaseDataSource().uploadPublishedGift(newGift);
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Success'),
+            content: Text('Gift published successfully!'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      // Handle errors
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error'),
+          content: Text('Failed to publish the gift. Please try again.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   Future<void> saveGift() async {
@@ -198,6 +266,12 @@ class _AddGiftScreenState extends State<AddGiftScreen> {
                         onPressed: saveGift,
                         buttonText:
                         widget.gift == null ? 'Add Gift' : 'Save Changes',
+                      ),
+                      SizedBox(height: screenHeight * 0.02),
+                      CreateEventButton(
+                        onPressed: publishGift,
+                        buttonText:
+                        'Publish Gift',
                       ),
                     ],
                   ),
