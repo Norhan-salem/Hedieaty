@@ -49,7 +49,7 @@ class MyPledgedGiftsScreen extends StatelessWidget {
                 side: BorderSide(color: ColorPalette.darkTeal, width: 3),
               ),
               onPressed: () {
-                GiftRepository().unpledgeGift(gift.id);
+                GiftRepository().unpledgeGift(gift.id, gift.eventId);
                 Navigator.pop(context);
               },
               child: Text(
@@ -138,13 +138,17 @@ class MyPledgedGiftsScreen extends StatelessWidget {
   Future<Map<String, dynamic>> _getGiftDetails(Gift gift) async {
     final owner =
         await EventRepository().getEventOwner(gift.eventId) ?? 'Unknown';
-    final date = await EventRepository().getEventDate(gift.eventId);
+    final dateString = await EventRepository().getEventDate(gift.eventId);
+    DateTime? date;
+    if (dateString != null) {
+      date = DateTime.tryParse(dateString);
+    }
     final isCloseToEvent =
         date != null && date.difference(DateTime.now()).inDays < 3;
     return {
       'owner': owner,
       'date': date,
-      'isCloseToEvent': isCloseToEvent,
+      'isCloseToEvent': !isCloseToEvent,
     };
   }
 }
