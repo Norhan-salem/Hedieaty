@@ -56,54 +56,66 @@ class _LoginScreenState extends State<LoginScreen> {
             'assets/images/registration_bg.png',
             fit: BoxFit.cover,
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(height: 60),
-                TitleLabel(text: 'Welcome Back,'),
-                SizedBox(height: 20),
-                InputTextField(
-                  label: 'Email',
-                  controller: _emailController,
-                  leadingIcon: Icons.email_outlined,
-                ),
-                SizedBox(height: 16),
-                InputTextField(
-                  label: 'Password',
-                  controller: _passwordController,
-                  isPassword: true,
-                  obscureText: _passwordVisibilityController.obscureText,
-                  togglePasswordView: () {
-                    _passwordVisibilityController.toggleVisibility(() {
-                      setState(() {
-                        _passwordVisibilityController.obscureText =
-                            !_passwordVisibilityController.obscureText;
-                      });
-                    });
-                  },
-                  leadingIcon: Icons.lock_outline,
-                ),
-                SizedBox(height: 32),
-                RegistrationButton(
-                  buttonText: 'Login',
-                  onPressed: _authenticateUser,
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SignUpScreen()),
-                    );
-                  },
-                  child: Text(
-                    'Not registered yet? Sign Up',
-                    style: TextStyle(
-                        color: ColorPalette.darkCyan, fontFamily: 'Poppins'),
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: 600,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 200),
+                      TitleLabel(text: 'Welcome Back,'),
+                      SizedBox(height: 20),
+                      InputTextField(
+                        label: 'Email',
+                        controller: _emailController,
+                        leadingIcon: Icons.email_outlined,
+                      ),
+                      SizedBox(height: 16),
+                      InputTextField(
+                        label: 'Password',
+                        controller: _passwordController,
+                        isPassword: true,
+                        obscureText: _passwordVisibilityController.obscureText,
+                        togglePasswordView: () {
+                          _passwordVisibilityController.toggleVisibility(() {
+                            setState(() {
+                              _passwordVisibilityController.obscureText =
+                                  !_passwordVisibilityController.obscureText;
+                            });
+                          });
+                        },
+                        leadingIcon: Icons.lock_outline,
+                      ),
+                      SizedBox(height: 32),
+                      RegistrationButton(
+                        buttonText: 'Login',
+                        onPressed: _authenticateUser,
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SignUpScreen()),
+                          );
+                        },
+                        child: Text(
+                          'Not registered yet? Sign Up',
+                          style: TextStyle(
+                            color: ColorPalette.darkCyan,
+                            fontFamily: 'Poppins',
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
           ),
         ],
