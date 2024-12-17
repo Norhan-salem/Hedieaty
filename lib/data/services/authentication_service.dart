@@ -5,7 +5,8 @@ class AuthService {
 
   Future<User?> registerUser(String email, String password) async {
     try {
-      final UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+      final UserCredential userCredential =
+          await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -20,7 +21,8 @@ class AuthService {
 
   Future<User?> loginUser(String email, String password) async {
     try {
-      final UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+      final UserCredential userCredential =
+          await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -41,8 +43,15 @@ class AuthService {
     }
   }
 
-  User? getCurrentUser() {
+  Future<User?> getCurrentUser() async {
     try {
+      final firebaseUser = _firebaseAuth.currentUser;
+      print('${_firebaseAuth.currentUser?.uid}');
+      if (firebaseUser == null) {
+        print('No user is logged in.');
+        return null;
+      }
+      print('${_firebaseAuth.currentUser?.uid}');
       return _firebaseAuth.currentUser;
     } catch (e) {
       throw Exception('Failed to fetch current user: $e');
