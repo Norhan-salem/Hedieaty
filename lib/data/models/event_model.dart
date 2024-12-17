@@ -30,7 +30,7 @@ class Event {
       description: map['description'],
       category: map['category'],
       userId: map['user_id'],
-      isDeleted: map['isDeleted'] == 0,
+      isDeleted: map['isDeleted'] == false,
     );
   }
 
@@ -43,7 +43,7 @@ class Event {
       'description': description,
       'category': category,
       'user_id': userId,
-      'isDeleted': isDeleted ? 1 : 0,
+      'isDeleted': isDeleted ? true : false,
     };
   }
 

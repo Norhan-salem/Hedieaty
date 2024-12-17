@@ -25,7 +25,7 @@ class User {
       password: map['password'],
       phoneNumber: map['phone_number'],
       profileImagePath: map['profile_image_path'],
-      isDeleted: map['isDeleted'] == 0
+      isDeleted: map['isDeleted'] == false
     );
   }
 
@@ -37,7 +37,7 @@ class User {
       'password': password,
       'phone_number': phoneNumber,
       'profile_image_path': profileImagePath,
-      'isDeleted': isDeleted ? 1 : 0
+      'isDeleted': isDeleted ? true : false
     };
   }
 }

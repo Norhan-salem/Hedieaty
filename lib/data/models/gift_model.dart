@@ -39,8 +39,8 @@ class Gift {
       status: map['status'],
       eventId: map['event_id'],
       pledged_by_user_id: map['pledged_by_user_id'],
-      isDeleted: map['isDeleted'] == 0,
-      isPublished: map['isPublished'] == 0,
+      isDeleted: map['isDeleted'] == false,
+      isPublished: map['isPublished'] == false,
     );
   }
 
@@ -55,8 +55,8 @@ class Gift {
       'status': status,
       'event_id': eventId,
       'pledged_by_user_id': pledged_by_user_id,
-      'isDeleted': isDeleted ? 1 : 0,
-      'isPublished': isPublished ? 1 : 0
+      'isDeleted': isDeleted ? true : false,
+      'isPublished': isPublished ? true : false
     };
   }
 
