@@ -82,6 +82,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final orientation = MediaQuery.of(context).orientation;
+
+    double screenWidth = screenSize.width;
+    double screenHeight = screenSize.height;
+
+    double padding = screenWidth < 600 ? 16.0 : 24.0;
+    double fontSize = screenWidth < 600 ? 14.0 : 16.0;
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Stack(
@@ -92,11 +101,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
             fit: BoxFit.cover,
           ),
           SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(padding),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 200),
+                SizedBox(height: screenHeight * 0.2),
                 TitleLabel(text: 'Get on Board!'),
                 SizedBox(height: 20),
                 InputTextField(
