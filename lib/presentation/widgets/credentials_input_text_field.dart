@@ -5,7 +5,6 @@ class InputTextField extends StatefulWidget {
   final String label;
   final TextEditingController controller;
   final bool isPassword;
-  final bool isConfirmPassword;
   final Function(String)? onChanged;
   final bool obscureText;
   final VoidCallback? togglePasswordView;
@@ -17,7 +16,6 @@ class InputTextField extends StatefulWidget {
     required this.label,
     required this.controller,
     this.isPassword = false,
-    this.isConfirmPassword = false,
     this.onChanged,
     this.obscureText = false,
     this.togglePasswordView,
@@ -52,6 +50,11 @@ class _InputTextFieldState extends State<InputTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    final double fontSize = screenWidth < 360 ? 14.0 : 16.0;
+    final double iconSize = screenWidth < 360 ? 20.0 : 24.0;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -62,16 +65,22 @@ class _InputTextFieldState extends State<InputTextField> {
           focusNode: _focusNode,
           decoration: InputDecoration(
             labelText: widget.label,
-            labelStyle: TextStyle(color: Colors.teal.withOpacity(0.8), fontFamily: 'Poppins'),
+            labelStyle: TextStyle(
+              color: Colors.teal.withOpacity(0.8),
+              fontFamily: 'Poppins',
+              fontSize: fontSize,
+            ),
             prefixIcon: Icon(
               widget.leadingIcon,
               color: ColorPalette.darkCyan,
+              size: iconSize,
             ),
             suffixIcon: widget.isPassword
                 ? IconButton(
               icon: Icon(
                 widget.obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined,
                 color: ColorPalette.darkCyan,
+                size: iconSize,
               ),
               onPressed: widget.togglePasswordView,
             )
@@ -100,6 +109,7 @@ class _InputTextFieldState extends State<InputTextField> {
             errorStyle: TextStyle(
               fontFamily: 'Poppins',
               color: ColorPalette.darkPink,
+              fontSize: fontSize * 0.9,
             ),
           ),
         ),
@@ -107,5 +117,3 @@ class _InputTextFieldState extends State<InputTextField> {
     );
   }
 }
-
-
