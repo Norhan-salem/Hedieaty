@@ -6,7 +6,6 @@ import 'package:hedieaty_flutter_application/presentation/widgets/create_event_b
 import 'package:hedieaty_flutter_application/presentation/widgets/custom_app_bar.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/details_input_text_field.dart';
 
-import '../../data/datasources/firebase_datasource.dart';
 import '../../data/models/gift_model.dart';
 import '../../data/repositories/gift_repository.dart';
 import '../../data/services/gift_service.dart';
@@ -45,9 +44,8 @@ class _AddGiftScreenState extends State<AddGiftScreen> {
         TextEditingController(text: widget.gift?.description ?? '');
     priceController = TextEditingController(
         text: widget.gift != null ? widget.gift!.price.toString() : '');
-    category = widget.gift != null
-        ? GiftCategory.values[widget.gift!.category]
-        : null;
+    category =
+        widget.gift != null ? GiftCategory.values[widget.gift!.category] : null;
     giftStatus = widget.gift != null
         ? GiftStatus.values[widget.gift!.status]
         : GiftStatus.available;
@@ -68,7 +66,8 @@ class _AddGiftScreenState extends State<AddGiftScreen> {
           id: widget.gift?.id ?? generateUniqueId(),
           name: nameController.text,
           giftImagePath: selectedImage?.path ??
-              widget.gift?.giftImagePath ?? 'assets/images/gift_default_img.png',
+              widget.gift?.giftImagePath ??
+              'assets/images/gift_default_img.png',
           description: descriptionController.text,
           category: category?.index ?? 0,
           price: double.parse(priceController.text),
@@ -95,7 +94,7 @@ class _AddGiftScreenState extends State<AddGiftScreen> {
           await GiftRepository().updateGift(newGift.id, updateFields);
         }
 
-        await FirebaseDataSource().uploadPublishedGift(newGift);
+        await GiftRepository().publishGiftToFirestore(newGift);
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -179,6 +178,7 @@ class _AddGiftScreenState extends State<AddGiftScreen> {
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
@@ -186,8 +186,8 @@ class _AddGiftScreenState extends State<AddGiftScreen> {
     double padding = screenWidth * 0.07;
 
     return Scaffold(
-      appBar: CustomAppBar(
-          title: widget.gift == null ? 'Add Gift' : 'Edit Gift'),
+      appBar:
+          CustomAppBar(title: widget.gift == null ? 'Add Gift' : 'Edit Gift'),
       body: Stack(
         children: [
           BackgroundContainer(
@@ -231,12 +231,12 @@ class _AddGiftScreenState extends State<AddGiftScreen> {
                         onChanged: (value) {
                           setState(() {
                             category = GiftCategory.values.firstWhere(
-                                  (e) => mapGiftCategoryToString(e) == value,
+                              (e) => mapGiftCategoryToString(e) == value,
                             );
                           });
                         },
                         validator: (value) =>
-                        value == null ? 'Select a category' : null,
+                            value == null ? 'Select a category' : null,
                       ),
                       DetailsTextField(
                         controller: priceController,
@@ -254,7 +254,8 @@ class _AddGiftScreenState extends State<AddGiftScreen> {
                       ),
                       SizedBox(height: screenHeight * 0.02),
                       GiftStatusToggle(
-                        initialStatus: widget.gift?.giftStatus ?? GiftStatus.available,
+                        initialStatus:
+                            widget.gift?.giftStatus ?? GiftStatus.available,
                         onStatusChanged: (status) {
                           setState(() {
                             giftStatus = status;
@@ -265,13 +266,12 @@ class _AddGiftScreenState extends State<AddGiftScreen> {
                       CreateEventButton(
                         onPressed: saveGift,
                         buttonText:
-                        widget.gift == null ? 'Add Gift' : 'Save Changes',
+                            widget.gift == null ? 'Add Gift' : 'Save Changes',
                       ),
                       SizedBox(height: screenHeight * 0.02),
                       CreateEventButton(
                         onPressed: publishGift,
-                        buttonText:
-                        'Publish Gift',
+                        buttonText: 'Publish Gift',
                       ),
                     ],
                   ),
@@ -288,4 +288,3 @@ class _AddGiftScreenState extends State<AddGiftScreen> {
     return DateTime.now().millisecondsSinceEpoch;
   }
 }
-
