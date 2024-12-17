@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../core/constants/color_palette.dart';
 import '../../core/utils/tile_decoration.dart';
 
@@ -14,34 +15,41 @@ class RegistrationButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double buttonWidth = constraints.maxWidth * 1;
+        double buttonHeight =
+            constraints.maxHeight > 0 ? constraints.maxHeight * 0.065 : 50;
 
-    return Container(
-      height: screenHeight * 0.065,
-      width: screenWidth * 0.9,
-      child: Container(
-        decoration: TileDecoration.tileBorder(),
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            textStyle: TextStyle(
-              fontSize: screenWidth * 0.05,
-              fontFamily: 'Poppins',
-            ),
-            backgroundColor: ColorPalette.lightYellow,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+        return Center(
+          child: SizedBox(
+            width: buttonWidth.clamp(300, 500),
+            height: buttonHeight.clamp(40, 53),
+            child: Container(
+              decoration: TileDecoration.tileBorder(),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  textStyle: TextStyle(
+                    fontSize: 24,
+                    fontFamily: 'Poppins',
+                  ),
+                  backgroundColor: ColorPalette.lightYellow,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onPressed: onPressed,
+                child: Text(
+                  buttonText,
+                  style: TextStyle(
+                    color: ColorPalette.darkTeal,
+                  ),
+                ),
+              ),
             ),
           ),
-          onPressed: onPressed,
-          child: Text(
-            buttonText,
-            style: TextStyle(
-              color: ColorPalette.darkTeal,
-            ),
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
