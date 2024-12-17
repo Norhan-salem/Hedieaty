@@ -66,7 +66,7 @@ class _FriendGiftTileState extends State<FriendGiftTile> {
                 ? 'Do you want to pledge this gift or view details?'
                 : 'This gift has already been pledged. You can only view details.',
             style:
-            TextStyle(color: ColorPalette.darkTeal, fontFamily: 'Poppins'),
+                TextStyle(color: ColorPalette.darkTeal, fontFamily: 'Poppins'),
           ),
           actions: [
             if (widget.pledgeManager.canPledgeGift(widget.gift))
@@ -77,7 +77,8 @@ class _FriendGiftTileState extends State<FriendGiftTile> {
                         borderRadius: BorderRadius.circular(10)),
                     side: BorderSide(color: ColorPalette.darkTeal, width: 3)),
                 onPressed: () async {
-                  final success = await widget.pledgeManager.pledgeGift(widget.gift);
+                  final success =
+                      await widget.pledgeManager.pledgeGift(widget.gift);
 
                   if (success) {
                     setState(() {
