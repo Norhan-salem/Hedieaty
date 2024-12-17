@@ -38,15 +38,17 @@ class _FriendGiftTileState extends State<FriendGiftTile> {
         decoration: TileDecoration.tileBorder(),
         child: Card(
           margin: EdgeInsets.zero,
-          color: widget.gift.status == 'Pledged'
+          color: widget.gift.status == GiftStatus.pledged.index
               ? ColorPalette.yellowHighlight
               : ColorPalette.eggShell,
           child: ListTile(
             title: Text(widget.gift.name,
                 style: TextStyle(
                     color: ColorPalette.darkTeal, fontFamily: 'Poppins')),
-            subtitle: Text('${mapGiftCategoryToString(GiftCategory.values[widget.gift.category])} - ${mapGiftStatusToString(GiftStatus.values[widget.gift.status])}',
-                style: TextStyle(color: Colors.grey, fontFamily: 'Poppins')),
+            subtitle: Text(
+              '${mapGiftCategoryToString(GiftCategory.values[widget.gift.category])} - ${mapGiftStatusToString(GiftStatus.values[widget.gift.status])}',
+              style: TextStyle(color: Colors.grey, fontFamily: 'Poppins'),
+            ),
           ),
         ),
       ),
@@ -64,26 +66,36 @@ class _FriendGiftTileState extends State<FriendGiftTile> {
                 ? 'Do you want to pledge this gift or view details?'
                 : 'This gift has already been pledged. You can only view details.',
             style:
-                TextStyle(color: ColorPalette.darkTeal, fontFamily: 'Poppins'),
+            TextStyle(color: ColorPalette.darkTeal, fontFamily: 'Poppins'),
           ),
           actions: [
             if (widget.pledgeManager.canPledgeGift(widget.gift))
               TextButton(
-                style: TextButton.styleFrom(backgroundColor: ColorPalette.darkPink,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                style: TextButton.styleFrom(
+                    backgroundColor: ColorPalette.darkPink,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
                     side: BorderSide(color: ColorPalette.darkTeal, width: 3)),
-                onPressed: () {
-                  widget.pledgeManager.pledgeGift(widget.gift);
+                onPressed: () async {
+                  final success = await widget.pledgeManager.pledgeGift(widget.gift);
+
+                  if (success) {
+                    setState(() {
+                      widget.gift.status = GiftStatus.pledged.index;
+                    });
+                  }
+
                   Navigator.pop(context);
-                  setState(() {});
                 },
                 child: Text('Pledge Gift',
                     style: TextStyle(
                         color: ColorPalette.eggShell, fontFamily: 'Poppins')),
               ),
             TextButton(
-              style: TextButton.styleFrom(backgroundColor: ColorPalette.darkCyan,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              style: TextButton.styleFrom(
+                  backgroundColor: ColorPalette.darkCyan,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
                   side: BorderSide(color: ColorPalette.darkTeal, width: 3)),
               onPressed: () {
                 Navigator.push(
@@ -98,8 +110,10 @@ class _FriendGiftTileState extends State<FriendGiftTile> {
                       color: ColorPalette.eggShell, fontFamily: 'Poppins')),
             ),
             TextButton(
-        style: TextButton.styleFrom(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),),
+              style: TextButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+              ),
               onPressed: () {
                 Navigator.pop(context);
               },
