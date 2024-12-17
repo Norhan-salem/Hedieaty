@@ -17,14 +17,20 @@ class GiftPledgeManager {
       if (!canPledgeGift(gift)) {
         throw Exception('Gift is not available for pledging.');
       }
-      final user = await _userRepository.fetchCurrentUser();
-      final rowsUpdated = await _giftRepository.pledgeGift(gift.id, user!.id);
 
-      if (rowsUpdated > 0) {
+      final user = await _userRepository.fetchCurrentUser();
+      if (user == null) {
+        throw Exception('User not found.');
+      }
+      final rowsUpdated =
+          await _giftRepository.pledgeGift(gift.id, user.id, gift.eventId);
+
+      if (rowsUpdated) {
         print('Gift pledged successfully.');
         return true;
       } else {
-        print('Failed to pledge the gift. It may have been modified or deleted.');
+        print(
+            'Failed to pledge the gift. It may have been modified or deleted.');
         return false;
       }
     } catch (e) {
