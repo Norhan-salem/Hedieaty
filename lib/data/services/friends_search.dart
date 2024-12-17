@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hedieaty_flutter_application/core/constants/color_palette.dart';
 
 import '../../presentation/components/friend_tile.dart';
+import '../../presentation/widgets/background_image_container.dart';
 import '../models/user_model.dart';
 import '../repositories/friend_repository.dart';
 
@@ -9,9 +11,21 @@ class FriendSearchDelegate extends SearchDelegate<User?> {
   String get searchFieldLabel => 'Search for friends';
 
   @override
+  TextStyle get searchFieldStyle =>
+      TextStyle(color: ColorPalette.darkTeal, fontFamily: 'Poppins');
+
+  @override
+  InputDecoration get searchFieldDecoration => InputDecoration(
+        filled: true,
+        fillColor: ColorPalette.lightYellow,
+        hintText: 'Search for friends',
+      );
+
+  @override
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
+        color: ColorPalette.darkTeal,
         icon: Icon(Icons.clear),
         onPressed: () {
           query = '';
@@ -23,6 +37,7 @@ class FriendSearchDelegate extends SearchDelegate<User?> {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
+      color: ColorPalette.darkTeal,
       icon: Icon(Icons.arrow_back),
       onPressed: () {
         close(context, null);
@@ -58,8 +73,14 @@ class FriendSearchDelegate extends SearchDelegate<User?> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return Center(
-      child: Text('Enter a name, email, or phone number to search.'),
+    return Stack(
+      children: [
+        BackgroundContainer(
+          child: Center(
+            child: Text('Enter a name, email, or phone number to search.'),
+          ),
+        ),
+      ],
     );
   }
 }
