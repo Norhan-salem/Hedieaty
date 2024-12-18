@@ -8,7 +8,13 @@ class AddFriendButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double buttonSize = screenWidth * 0.2;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    // Adjust button size based on both screen width and height
+    double buttonSize = screenWidth < screenHeight
+        ? screenWidth * 0.2  // Portrait mode
+        : screenHeight * 0.2; // Landscape mode
+
     double iconSize = buttonSize * 0.6;
 
     return Container(
@@ -88,3 +94,4 @@ class AddFriendButton extends StatelessWidget {
     );
   }
 }
+
