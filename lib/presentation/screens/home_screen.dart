@@ -3,7 +3,6 @@ import 'package:hedieaty_flutter_application/data/repositories/user_repository.d
 import 'package:hedieaty_flutter_application/presentation/screens/profile_screen.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/background_image_container.dart';
 
-import '../../core/constants/color_palette.dart';
 import '../../data/repositories/event_repository.dart';
 import '../../data/services/friends_search.dart';
 import '../components/add_friend_button.dart';
