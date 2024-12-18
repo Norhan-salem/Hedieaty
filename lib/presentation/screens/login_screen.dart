@@ -5,8 +5,8 @@ import 'package:hedieaty_flutter_application/presentation/widgets/title_label.da
 
 import '../../core/constants/color_palette.dart';
 import '../../core/utils/password_visibility_utils.dart';
-import '../../data/repositories/user_repository.dart';
 import '../../data/services/authentication_service.dart';
+import '../../data/services/notification_service.dart';
 import '../widgets/credentials_input_text_field.dart';
 import 'home_screen.dart';
 
@@ -19,7 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final PasswordVisibilityController _passwordVisibilityController =
-      PasswordVisibilityController(true);
+  PasswordVisibilityController(true);
 
   final AuthService _authService = AuthService();
 
@@ -29,11 +29,10 @@ class _LoginScreenState extends State<LoginScreen> {
         _emailController.text,
         _passwordController.text,
       );
-
-      final userId = await UserRepository().fetchCurrentUser();
-      print('User fetched from local DB with ID: $userId');
-
+      _authService.logLoginTime();
+      print('User fetched from local DB with ID: ${user?.uid}');
       if (user != null) {
+        await _initializeNotifications(user.uid);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomeScreen()),
@@ -43,6 +42,16 @@ class _LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString())),
       );
+    }
+  }
+
+  Future<void> _initializeNotifications(String userId) async {
+    final loginTime = await _authService.getLoginTime();
+    print("Login time for user: $loginTime");
+
+    if (loginTime != null) {
+      print("Initializing global gift listener for user: $userId");
+      GlobalGiftListener().initialize(userId);
     }
   }
 
@@ -85,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           _passwordVisibilityController.toggleVisibility(() {
                             setState(() {
                               _passwordVisibilityController.obscureText =
-                                  !_passwordVisibilityController.obscureText;
+                              !_passwordVisibilityController.obscureText;
                             });
                           });
                         },
