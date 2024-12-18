@@ -46,3 +46,8 @@ android {
 flutter {
     source = "../.."
 }
+
+dependencies {
+    implementation platform('com.google.firebase:firebase-bom:15.1.5')
+    implementation 'com.google.firebase:firebase-messaging-ktx'
+}
