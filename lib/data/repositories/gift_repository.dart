@@ -33,15 +33,36 @@ class GiftRepository {
     );
   }
 
-  Future<int> deleteGift(int giftId) async {
+  Future<void> deleteGift(int giftId, int eventId) async {
     final db = await _sqliteDataSource.database;
-    return await db.update(
-      'gifts',
-      {'isDeleted': 1},
-      where: 'id = ?',
-      whereArgs: [giftId],
-    );
+    try {
+      final localResult = await db.update(
+        'gifts',
+        {'isDeleted': 1},
+        where: 'id = ?',
+        whereArgs: [giftId],
+      );
+
+      if (localResult > 0) {
+        print('Local soft delete succeeded for gift: $giftId');
+      } else {
+        print('Local soft delete failed for gift: $giftId');
+      }
+
+      await FirebaseFirestore.instance
+          .collection('events')
+          .doc(eventId.toString())
+          .collection('gifts')
+          .doc(giftId.toString())
+          .update({'isDeleted': true});
+
+      print('Firestore soft delete succeeded for gift: $giftId');
+    } catch (e) {
+      print('Error during gift deletion: $e');
+      throw Exception('Failed to delete gift: $e');
+    }
   }
+
 
   Future<bool> pledgeGift(int giftId, String userId, int eventId) async {
     try {
@@ -150,16 +171,39 @@ class GiftRepository {
   }
 
   Future<List<Gift>> fetchGiftsByEventId(int eventId) async {
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('events')
+          .doc(eventId.toString())
+          .collection('gifts')
+          .where('isDeleted', isEqualTo: false)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        return querySnapshot.docs
+            .map((doc) => Gift.fromMap(doc.data()))
+            .toList();
+      } else {
+        return [];
+      }
+    } catch (e) {
+      print('Error fetching gifts: $e');
+      return [];
+    }
+  }
+
+  Future<List<Gift>> fetchLocalGiftsByEventId(int eventId) async {
     final db = await _sqliteDataSource.database;
 
-    final List<Map<String, dynamic>> result = await db.query(
+    final publishedGifts = await fetchGiftsByEventId(eventId);
+    final List<Map<String, dynamic>> localGifts = await db.query(
       'gifts',
-      where: 'event_id = ? AND isDeleted = 0',
+      where: 'event_id = ? AND isDeleted = 0 AND isPublished = 0',
       whereArgs: [eventId],
     );
-    return result.isNotEmpty
-        ? result.map((giftMap) => Gift.fromMap(giftMap)).toList()
-        : [];
+
+    final unpublishedGifts = localGifts.map((giftMap) => Gift.fromMap(giftMap)).toList();
+    return [...publishedGifts, ...unpublishedGifts];
   }
 
   // Future<List<Gift>> fetchPledgedGiftsByUserId(String userId) async {
@@ -233,12 +277,15 @@ class GiftRepository {
 
   Future<bool> deleteGiftInFirestore(int giftId, int eventId) async {
     try {
-      await _firestore
+      print('Attempting to soft delete gift: $giftId for event: $eventId');
+      final docRef = _firestore
           .collection('events')
           .doc(eventId.toString())
           .collection('gifts')
-          .doc(giftId.toString())
-          .update({'isDeleted': true});
+          .doc(giftId.toString());
+
+      await docRef.update({'isDeleted': true});
+      print('Soft delete successful for gift: $giftId');
       return true;
     } catch (e) {
       print('Error deleting gift in Firestore: $e');
