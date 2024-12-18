@@ -79,7 +79,7 @@ class _EventListState extends State<EventList> {
           },
           onTap: () async {
             try {
-              final gifts = await GiftRepository().fetchGiftsByEventId(event.id);
+              final gifts = await GiftRepository().fetchLocalGiftsByEventId(event.id);
               print('Fetched ${gifts.length} gifts');
               Navigator.push(
                 context,
