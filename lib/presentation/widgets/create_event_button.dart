@@ -16,13 +16,24 @@ class CreateEventButton extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
+    double buttonHeight = screenWidth < screenHeight
+        ? screenWidth * 0.15  // Portrait mode
+        : screenHeight * 0.15; // Landscape mode
+
+    double buttonWidth = screenWidth < screenHeight
+        ? screenWidth * 0.7  // Portrait mode
+        : screenWidth * 0.5; // Landscape mode
+
+    double fontSize = screenWidth < screenHeight
+    ? screenWidth * 0.048 : screenHeight * 0.07;
+
     return Container(
-      height: screenHeight * 0.07,
-      width: screenWidth * 0.7,
+      height: buttonHeight,
+      width: buttonWidth,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           textStyle: TextStyle(
-            fontSize: screenWidth * 0.048,
+            fontSize: fontSize,
             fontFamily: 'Poppins',
           ),
           backgroundColor: ColorPalette.darkCyan,
@@ -35,7 +46,10 @@ class CreateEventButton extends StatelessWidget {
           ),
         ),
         onPressed: onPressed,
-        child: Text(buttonText, style: TextStyle(color: ColorPalette.eggShell),),
+        child: Text(
+          buttonText,
+          style: TextStyle(color: ColorPalette.eggShell),
+        ),
       ),
     );
   }

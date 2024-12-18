@@ -11,7 +11,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     Key? key,
     required this.title,
     this.actionIcon,
-    this.onActionPressed, this.leadingIcon,
+    this.onActionPressed,
+    this.leadingIcon,
   }) : super(key: key);
 
   @override
@@ -20,8 +21,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     double screenHeight = MediaQuery.of(context).size.height;
 
     double appBarHeight = screenHeight * 0.08;
-    double fontSize = screenWidth * 0.07;
-    double iconSize = screenWidth * 0.08;
+
+    double fontSize = screenWidth > screenHeight
+        ? screenHeight * 0.07
+        : screenWidth * 0.07;
+
+    double iconSize = screenWidth > screenHeight
+        ? screenHeight * 0.08
+        : screenWidth * 0.09;
 
     return Container(
       padding: EdgeInsets.all(screenWidth * 0.02),
@@ -38,6 +45,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           style: TextStyle(
             fontSize: fontSize,
             fontWeight: FontWeight.bold,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
         actions: [
@@ -59,3 +67,4 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(80);
 }
+

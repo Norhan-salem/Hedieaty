@@ -69,12 +69,6 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             }
           },
-          child: Container(
-            decoration: BoxDecoration(
-              color: ColorPalette.darkTeal,
-              borderRadius: BorderRadius.circular(40),
-              border: Border.all(color: ColorPalette.darkTeal, width: 1),
-            ),
             child: CircleAvatar(
               radius: 40,
               backgroundImage: _profileImgPath != null
@@ -84,7 +78,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-      ),
       body: Stack(
         children: [
           BackgroundContainer(
