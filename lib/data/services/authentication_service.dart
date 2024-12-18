@@ -1,7 +1,23 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  static const _loginTimeKey = 'login_time';
+
+  Future<void> logLoginTime() async {
+    final prefs = await SharedPreferences.getInstance();
+    int currentTime = DateTime.now().millisecondsSinceEpoch;
+    await prefs.setInt(_loginTimeKey, currentTime);
+    print("Login time set: $currentTime");
+  }
+
+  Future<int?> getLoginTime() async {
+    final prefs = await SharedPreferences.getInstance();
+    int? loginTime = prefs.getInt(_loginTimeKey);
+    print("Retrieved login time: $loginTime");
+    return loginTime;
+  }
 
   Future<User?> registerUser(String email, String password) async {
     try {
