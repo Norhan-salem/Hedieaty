@@ -8,6 +8,7 @@ import '../../data/repositories/event_repository.dart';
 import '../../data/services/friends_search.dart';
 import '../components/add_friend_button.dart';
 import '../components/friend_list.dart';
+import '../components/notif_button.dart';
 import '../widgets/create_event_button.dart';
 import '../widgets/custom_app_bar.dart';
 import 'events_list_screen.dart';
@@ -20,7 +21,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final TextEditingController _searchController = TextEditingController();
   String? _currentUserId;
   String? _profileImgPath;
 
@@ -41,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
     double appBarPadding = screenHeight * 0.02;
 
     return Scaffold(
@@ -94,7 +95,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   buttonText: 'Create Your Own Event',
                   onPressed: () async {
                     if (_currentUserId != null) {
-                      final userEvents = await EventRepository().fetchUserEvents(_currentUserId!);
+                      final userEvents = await EventRepository()
+                          .fetchUserEvents(_currentUserId!);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -114,9 +116,18 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
+          Positioned(
+            bottom: 16,
+            left: 16,
+            child: NotificationButton(),
+          ),
+          Positioned(
+            bottom: 16,
+            right: 16,
+            child: AddFriendButton(),
+          ),
         ],
       ),
-      floatingActionButton: AddFriendButton(),
     );
   }
 }
