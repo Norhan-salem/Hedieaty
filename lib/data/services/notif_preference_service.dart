@@ -5,11 +5,15 @@ class NotifPreferencesService {
 
   Future<bool> getNotificationPreference() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(_notificationsKey) ?? true; // Default is notif enabled
+    bool notificationsEnabled =
+        prefs.getBool(_notificationsKey) ?? true; // Default is enabled
+    print("Notification preference fetched: $notificationsEnabled");
+    return notificationsEnabled;
   }
 
-  Future<bool> setNotificationPreference(bool isEnabled) async {
+  Future<void> setNotificationPreference(bool isEnabled) async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.setBool(_notificationsKey, isEnabled);
+    await prefs.setBool(_notificationsKey, isEnabled);
+    print("Notification preference set: $isEnabled");
   }
 }
