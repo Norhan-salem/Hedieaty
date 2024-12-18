@@ -21,7 +21,7 @@ class _GiftListState extends State<GiftList> {
     try {
       final giftId = widget.myGifts[index].id;
       if (giftId != null) {
-        await GiftRepository().deleteGift(giftId);
+        await GiftRepository().deleteGift(giftId, widget.myGifts[index].eventId);
         setState(() {
           widget.myGifts.removeAt(index);
         });
