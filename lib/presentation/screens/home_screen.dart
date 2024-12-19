@@ -69,7 +69,9 @@ class _HomeScreenState extends State<HomeScreen> {
             }
           },
           child: CircleAvatar(
-            radius: 40,
+            radius: screenWidth > screenHeight
+                ? 50
+                : 40,
             backgroundImage: _profileImgPath != null
                 ? NetworkImage(_profileImgPath!)
                 : NetworkImage('https://i.ibb.co/WfJVvF6/profile-mock.png'),

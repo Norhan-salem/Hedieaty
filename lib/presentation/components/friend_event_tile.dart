@@ -19,22 +19,30 @@ class FriendEventTile extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    bool isLandscape = screenWidth > screenHeight;
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
         margin: EdgeInsets.symmetric(
-            vertical: screenHeight * 0.008, horizontal: screenWidth * 0.05),
+          vertical: isLandscape ? screenHeight * 0.015 : screenHeight * 0.008,
+          horizontal: isLandscape ? screenWidth * 0.15 : screenWidth * 0.05,
+        ),
         decoration: TileDecoration.tileBorder(),
         child: ListTile(
           title: Text(
             event.name,
-            style:
-                TextStyle(color: ColorPalette.darkTeal, fontFamily: 'Poppins'),
+            style: TextStyle(
+              color: ColorPalette.darkTeal,
+              fontFamily: 'Poppins',
+            ),
           ),
           subtitle: Text(
             '${mapEventCategoryToString(EventCategory.values[event.category])} - ${formatDate(event.date)}',
-            style: TextStyle(color: Colors.grey, fontFamily: 'Poppins'),
+            style: TextStyle(
+              color: Colors.grey,
+              fontFamily: 'Poppins',
+            ),
           ),
         ),
       ),

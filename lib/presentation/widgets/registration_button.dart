@@ -23,7 +23,7 @@ class RegistrationButton extends StatelessWidget {
 
         return Center(
           child: SizedBox(
-            width: buttonWidth.clamp(300, 500),
+            width: buttonWidth.clamp(300, 400),
             height: buttonHeight.clamp(40, 53),
             child: Container(
               decoration: TileDecoration.tileBorder(),

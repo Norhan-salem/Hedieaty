@@ -19,14 +19,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-
+    bool isLandscape = screenWidth > screenHeight;
     double appBarHeight = screenHeight * 0.08;
 
-    double fontSize = screenWidth > screenHeight
+    double fontSize = isLandscape
         ? screenHeight * 0.07
         : screenWidth * 0.07;
 
-    double iconSize = screenWidth > screenHeight
+    double iconSize = isLandscape
         ? screenHeight * 0.08
         : screenWidth * 0.09;
 

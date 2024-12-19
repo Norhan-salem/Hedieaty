@@ -22,10 +22,10 @@ class CreateEventButton extends StatelessWidget {
 
     double buttonWidth = screenWidth < screenHeight
         ? screenWidth * 0.7  // Portrait mode
-        : screenWidth * 0.5; // Landscape mode
+        : screenWidth * 0.45; // Landscape mode
 
     double fontSize = screenWidth < screenHeight
-    ? screenWidth * 0.048 : screenHeight * 0.07;
+    ? screenWidth * 0.048 : screenHeight * 0.06;
 
     return Container(
       height: buttonHeight,

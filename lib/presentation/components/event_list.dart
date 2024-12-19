@@ -6,6 +6,7 @@ import '../../data/models/event_model.dart';
 import '../../data/repositories/event_repository.dart';
 import '../screens/add_edit_event_screen.dart';
 import 'event_tile.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class EventList extends StatefulWidget {
   final List<Event> events;
@@ -72,46 +73,50 @@ class _EventListState extends State<EventList> {
       itemCount: widget.events.length,
       itemBuilder: (context, index) {
         final event = widget.events[index];
-        return EventTile(
-          event: event,
-          onDelete: () {
-            _deleteEvent(index);
-          },
-          onTap: () async {
-            try {
-              final gifts = await GiftRepository().fetchLocalGiftsByEventId(event.id);
-              print('Fetched ${gifts.length} gifts');
-              Navigator.push(
+
+        return Animate(
+          child: EventTile(
+            event: event,
+            onDelete: () {
+              _deleteEvent(index);
+            },
+            onTap: () async {
+              try {
+                final gifts =
+                await GiftRepository().fetchLocalGiftsByEventId(event.id);
+                print('Fetched ${gifts.length} gifts');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => GiftsListScreen(
+                      eventId: event.id,
+                      gifts: gifts,
+                    ),
+                  ),
+                );
+              } catch (e) {
+                print('Error fetching gifts: $e');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Failed to load gifts: ${e.toString()}'),
+                  ),
+                );
+              }
+            },
+            onEdit: () {
+              Navigator.push<Event>(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => GiftsListScreen(
-                    eventId: event.id,
-                    gifts: gifts,
-                  ),
+                  builder: (context) => AddEventScreen(event: event),
                 ),
-              );
-            } catch (e) {
-              print('Error fetching gifts: $e');
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Failed to load gifts: ${e.toString()}'),
-                ),
-              );
-            }
-          },
-          onEdit: () {
-            Navigator.push<Event>(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AddEventScreen(event: event),
-              ),
-            ).then((updatedEvent) {
-              if (updatedEvent != null) {
-                _updateEvent(index, updatedEvent);
-              }
-            });
-          },
-        );
+              ).then((updatedEvent) {
+                if (updatedEvent != null) {
+                  _updateEvent(index, updatedEvent);
+                }
+              });
+            },
+          ),
+        ).slide(begin: Offset(0, 5), end: Offset.zero, duration: 400.ms);
       },
     );
   }

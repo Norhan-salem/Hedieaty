@@ -29,25 +29,44 @@ class _FriendGiftTileState extends State<FriendGiftTile> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    bool isLandscape = screenWidth > screenHeight;
 
     return GestureDetector(
       onTap: () => showPledgeDialog(context),
-      child: Container(
-        margin: EdgeInsets.symmetric(
-            vertical: screenHeight * 0.008, horizontal: screenWidth * 0.05),
-        decoration: TileDecoration.tileBorder(),
-        child: Card(
-          margin: EdgeInsets.zero,
-          color: widget.gift.status == GiftStatus.pledged.index
-              ? ColorPalette.yellowHighlight
-              : ColorPalette.eggShell,
-          child: ListTile(
-            title: Text(widget.gift.name,
+      child: Center(
+        child: Container(
+          width: isLandscape ? screenWidth * 0.6 : double.infinity,
+          margin: EdgeInsets.symmetric(
+            vertical: isLandscape ? screenHeight * 0.02 : screenHeight * 0.008,
+            horizontal: isLandscape ? screenWidth * 0.03 : screenWidth * 0.05,
+          ),
+          decoration: TileDecoration.tileBorder(),
+          child: Card(
+            margin: EdgeInsets.zero,
+            color: widget.gift.status == GiftStatus.pledged.index
+                ? ColorPalette.yellowHighlight
+                : ColorPalette.eggShell,
+            child: ListTile(
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: isLandscape ? screenWidth * 0.03 : screenWidth * 0.04,
+                vertical: isLandscape ? screenHeight * 0.005 : screenHeight * 0.001,
+              ),
+              title: Text(
+                widget.gift.name,
                 style: TextStyle(
-                    color: ColorPalette.darkTeal, fontFamily: 'Poppins')),
-            subtitle: Text(
-              '${mapGiftCategoryToString(GiftCategory.values[widget.gift.category])} - ${mapGiftStatusToString(GiftStatus.values[widget.gift.status])}',
-              style: TextStyle(color: Colors.grey, fontFamily: 'Poppins'),
+                  fontSize: isLandscape ? screenWidth * 0.025 : screenWidth * 0.04,
+                  color: ColorPalette.darkTeal,
+                  fontFamily: 'Poppins',
+                ),
+              ),
+              subtitle: Text(
+                '${mapGiftCategoryToString(GiftCategory.values[widget.gift.category])} - ${mapGiftStatusToString(GiftStatus.values[widget.gift.status])}',
+                style: TextStyle(
+                  fontSize: isLandscape ? screenWidth * 0.02 : screenWidth * 0.035,
+                  color: Colors.grey,
+                  fontFamily: 'Poppins',
+                ),
+              ),
             ),
           ),
         ),
@@ -65,20 +84,20 @@ class _FriendGiftTileState extends State<FriendGiftTile> {
             widget.pledgeManager.canPledgeGift(widget.gift)
                 ? 'Do you want to pledge this gift or view details?'
                 : 'This gift has already been pledged. You can only view details.',
-            style:
-                TextStyle(color: ColorPalette.darkTeal, fontFamily: 'Poppins'),
+            style: TextStyle(color: ColorPalette.darkTeal, fontFamily: 'Poppins'),
           ),
           actions: [
             if (widget.pledgeManager.canPledgeGift(widget.gift))
               TextButton(
                 style: TextButton.styleFrom(
-                    backgroundColor: ColorPalette.darkPink,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    side: BorderSide(color: ColorPalette.darkTeal, width: 3)),
+                  backgroundColor: ColorPalette.darkPink,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  side: BorderSide(color: ColorPalette.darkTeal, width: 3),
+                ),
                 onPressed: () async {
-                  final success =
-                      await widget.pledgeManager.pledgeGift(widget.gift);
+                  final success = await widget.pledgeManager.pledgeGift(widget.gift);
 
                   if (success) {
                     setState(() {
@@ -88,16 +107,22 @@ class _FriendGiftTileState extends State<FriendGiftTile> {
 
                   Navigator.pop(context);
                 },
-                child: Text('Pledge Gift',
-                    style: TextStyle(
-                        color: ColorPalette.eggShell, fontFamily: 'Poppins')),
+                child: Text(
+                  'Pledge Gift',
+                  style: TextStyle(
+                    color: ColorPalette.eggShell,
+                    fontFamily: 'Poppins',
+                  ),
+                ),
               ),
             TextButton(
               style: TextButton.styleFrom(
-                  backgroundColor: ColorPalette.darkCyan,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)),
-                  side: BorderSide(color: ColorPalette.darkTeal, width: 3)),
+                backgroundColor: ColorPalette.darkCyan,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                side: BorderSide(color: ColorPalette.darkTeal, width: 3),
+              ),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -106,21 +131,30 @@ class _FriendGiftTileState extends State<FriendGiftTile> {
                   ),
                 );
               },
-              child: Text('View Details',
-                  style: TextStyle(
-                      color: ColorPalette.eggShell, fontFamily: 'Poppins')),
+              child: Text(
+                'View Details',
+                style: TextStyle(
+                  color: ColorPalette.eggShell,
+                  fontFamily: 'Poppins',
+                ),
+              ),
             ),
             TextButton(
               style: TextButton.styleFrom(
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Cancel',
-                  style: TextStyle(
-                      color: ColorPalette.darkPink, fontFamily: 'Poppins')),
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  color: ColorPalette.darkPink,
+                  fontFamily: 'Poppins',
+                ),
+              ),
             ),
           ],
         );

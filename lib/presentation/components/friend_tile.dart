@@ -7,6 +7,7 @@ import '../../core/constants/color_palette.dart';
 import '../../data/models/user_model.dart';
 import '../../data/services/event_service.dart';
 
+
 class FriendTile extends StatelessWidget {
   final User friend;
 
@@ -16,27 +17,28 @@ class FriendTile extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    bool isLandscape = screenWidth > screenHeight;
 
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: screenWidth * 0.05,
-        vertical: screenHeight * 0.01,
+        horizontal: isLandscape ? screenWidth * 0.03 : screenWidth * 0.05,
+        vertical: isLandscape ? screenHeight * 0.005 : screenHeight * 0.01,
       ),
       child: Container(
         decoration: TileDecoration.tileBorder(),
         child: ListTile(
           contentPadding: EdgeInsets.symmetric(
-            horizontal: screenWidth * 0.04,
-            vertical: screenHeight * 0.001,
+            horizontal: isLandscape ? screenWidth * 0.02 : screenWidth * 0.04,
+            vertical: isLandscape ? screenHeight * 0.005 : screenHeight * 0.001,
           ),
           leading: CircleAvatar(
-            radius: screenWidth * 0.06,
+            radius: isLandscape ? screenWidth * 0.04 : screenWidth * 0.06,
             backgroundImage: NetworkImage(friend.profileImagePath),
           ),
           title: Text(
             friend.username,
             style: TextStyle(
-              fontSize: screenWidth * 0.04,
+              fontSize: isLandscape ? screenWidth * 0.025 : screenWidth * 0.04,
               fontWeight: FontWeight.w600,
               fontFamily: 'Poppins',
               color: ColorPalette.darkTeal,
@@ -50,7 +52,9 @@ class FriendTile extends StatelessWidget {
                   'Loading...',
                   style: TextStyle(
                     color: Colors.grey,
-                    fontSize: screenWidth * 0.033,
+                    fontSize: isLandscape
+                        ? screenWidth * 0.025
+                        : screenWidth * 0.033,
                     fontFamily: 'Poppins',
                   ),
                 );
@@ -59,7 +63,9 @@ class FriendTile extends StatelessWidget {
                   'Error: ${snapshot.error}',
                   style: TextStyle(
                     color: Colors.grey,
-                    fontSize: screenWidth * 0.033,
+                    fontSize: isLandscape
+                        ? screenWidth * 0.025
+                        : screenWidth * 0.033,
                     fontFamily: 'Poppins',
                   ),
                 );
@@ -73,7 +79,9 @@ class FriendTile extends StatelessWidget {
                     color: upcomingEvents > 0
                         ? ColorPalette.darkPink
                         : Colors.grey,
-                    fontSize: screenWidth * 0.033,
+                    fontSize: isLandscape
+                        ? screenWidth * 0.02
+                        : screenWidth * 0.033,
                     fontFamily: 'Poppins',
                   ),
                 );
@@ -82,7 +90,9 @@ class FriendTile extends StatelessWidget {
                   'No Upcoming Events',
                   style: TextStyle(
                     color: Colors.grey,
-                    fontSize: screenWidth * 0.033,
+                    fontSize: isLandscape
+                        ? screenWidth * 0.02
+                        : screenWidth * 0.033,
                     fontFamily: 'Poppins',
                   ),
                 );
@@ -98,46 +108,14 @@ class FriendTile extends StatelessWidget {
               }
               int upcomingEvents = snapshot.data!;
               return upcomingEvents > 0
-                  ? _buildEventIndicator(screenWidth, upcomingEvents)
+                  ? _buildEventIndicator(
+                isLandscape ? screenWidth * 0.5 : screenWidth,
+                upcomingEvents,
+              )
                   : SizedBox.shrink();
             },
           ),
-          onTap: () async {
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (context) => Center(child: CircularProgressIndicator()),
-            );
-            try {
-              final friendEvents =
-                  await EventRepository().fetchUserEvents(friend.id);
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => FriendEventsListScreen(
-                    friendEvents: friendEvents,
-                    friendName: friend.username,
-                  ),
-                ),
-              );
-            } catch (error) {
-              Navigator.pop(context);
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: Text('Error'),
-                  content: Text('Failed to fetch events: $error'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text('OK'),
-                    ),
-                  ],
-                ),
-              );
-            }
-          },
+          onTap: () => _onTap(context),
         ),
       ),
     );
@@ -160,4 +138,42 @@ class FriendTile extends StatelessWidget {
       ),
     );
   }
+
+  Future<void> _onTap(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Center(child: CircularProgressIndicator()),
+    );
+    try {
+      final friendEvents =
+      await EventRepository().fetchUserEvents(friend.id);
+      Navigator.pop(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => FriendEventsListScreen(
+            friendEvents: friendEvents,
+            friendName: friend.username,
+          ),
+        ),
+      );
+    } catch (error) {
+      Navigator.pop(context);
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error'),
+          content: Text('Failed to fetch events: $error'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
 }
+

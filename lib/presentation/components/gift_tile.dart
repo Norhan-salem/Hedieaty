@@ -25,10 +25,12 @@ class GiftTile extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
+    bool isLandscape = screenWidth > screenHeight;
+
     return Container(
       margin: EdgeInsets.symmetric(
-        vertical: screenHeight * 0.008,
-        horizontal: screenWidth * 0.05,
+        vertical: isLandscape ? screenHeight * 0.02 : screenHeight * 0.008,
+        horizontal: isLandscape ? screenWidth * 0.15 : screenWidth * 0.05,
       ),
       decoration: TileDecoration.tileBorder(),
       child: Card(
@@ -49,11 +51,16 @@ class GiftTile extends StatelessWidget {
             title: Text(
               gift.name,
               style: TextStyle(
-                  color: ColorPalette.darkTeal, fontFamily: 'Poppins'),
+                color: ColorPalette.darkTeal,
+                fontFamily: 'Poppins',
+              ),
             ),
             subtitle: Text(
               '${mapGiftCategoryToString(GiftCategory.values[gift.category])} - ${mapGiftStatusToString(GiftStatus.values[gift.status])}',
-              style: TextStyle(color: Colors.grey, fontFamily: 'Poppins'),
+              style: TextStyle(
+                color: Colors.grey,
+                fontFamily: 'Poppins',
+              ),
             ),
             trailing: Theme(
               data: Theme.of(context).copyWith(
@@ -79,7 +86,7 @@ class GiftTile extends StatelessWidget {
                 itemBuilder: (context) {
                   List<PopupMenuEntry<String>> options = [];
 
-                  if (gift.status!= 1) {
+                  if (gift.status != 1) {
                     options.add(
                       const PopupMenuItem(
                         value: 'edit',
