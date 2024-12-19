@@ -1,12 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:hedieaty_flutter_application/core/constants/color_palette.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImagePickerWidget extends StatefulWidget {
   final String? initialImagePath;
-  final Function(File?) onImageSelected;
+  final Function(String?) onImageSelected;
 
   const ImagePickerWidget({
     Key? key,
@@ -20,13 +18,13 @@ class ImagePickerWidget extends StatefulWidget {
 
 class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   final ImagePicker _picker = ImagePicker();
-  File? _selectedImage;
+  String? _selectedImage;
 
   @override
   void initState() {
     super.initState();
     if (widget.initialImagePath != null) {
-      _selectedImage = File(widget.initialImagePath!);
+      _selectedImage = widget.initialImagePath!;
     }
   }
 
@@ -35,7 +33,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 
     if (pickedFile != null) {
       setState(() {
-        _selectedImage = File(pickedFile.path);
+        _selectedImage = pickedFile.path;
       });
       widget.onImageSelected(_selectedImage);
     }
@@ -65,10 +63,11 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
         child: CircleAvatar(
           radius: avatarRadius,
           backgroundImage: _selectedImage != null
-              ? FileImage(_selectedImage!)
+              ? NetworkImage(_selectedImage!)
               : widget.initialImagePath != null
-              ? FileImage(File(widget.initialImagePath!))
-              : AssetImage('assets/images/default_profile.png') as ImageProvider,
+                  ? NetworkImage(widget.initialImagePath!)
+                  : NetworkImage(
+                      'https://i.ibb.co/QFnzXZH/gift-default-img.png'),
           child: Align(
             alignment: Alignment.bottomRight,
             child: Container(
@@ -99,5 +98,4 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       ),
     );
   }
-
 }

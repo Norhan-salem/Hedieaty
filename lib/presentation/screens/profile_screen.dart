@@ -15,6 +15,7 @@ import '../../data/models/user_model.dart';
 import '../../data/repositories/event_repository.dart';
 import '../../data/repositories/gift_repository.dart';
 import '../../data/repositories/user_repository.dart';
+import '../../data/services/img_storage_service.dart';
 import '../../data/services/notif_preference_service.dart';
 import '../components/gift_details_tile.dart';
 import '../widgets/custom_app_bar.dart';
@@ -41,11 +42,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final EventRepository _eventRepository = EventRepository();
   final GiftRepository _giftRepository = GiftRepository();
   final NotifPreferencesService _notifPreferencesService =
-      NotifPreferencesService();
+  NotifPreferencesService();
 
   bool _isEditing = false;
   bool _notificationsEnabled = true;
-  File? selectedImage;
+  String? selectedImage;
   List<Event> userEvents = [];
   Map<int, List<Gift>> eventGifts = {};
 
@@ -97,7 +98,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _fetchUserEventsAndGifts() async {
     try {
       List<Event> events =
-          await _eventRepository.fetchUserEvents(widget.userId);
+      await _eventRepository.fetchUserEvents(widget.userId);
       Map<int, List<Gift>> giftsMap = {};
       for (Event event in events) {
         List<Gift> gifts = await _giftRepository.fetchGiftsByEventId(event.id!);
@@ -138,6 +139,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _emailController.dispose();
     _phoneController.dispose();
     super.dispose();
+  }
+
+  Future<String?> _uploadProfileImage() async {
+    if (selectedImage != null) {
+      final imageFile = File(selectedImage!);
+      try {
+        final imageUrl = await uploadToImgBB(imageFile);
+        return imageUrl;
+      } catch (e) {
+        print('Error uploading image: $e');
+        return null;
+      }
+    }
+    return null;
   }
 
   @override
@@ -265,9 +280,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 'phone_number', _phoneController.text);
                           }
                           if (selectedImage != null) {
-                            String imagePath = selectedImage!.path;
-                            await _updateProfileField(
-                                'profile_image_path', imagePath);
+                            String? imagePath = await _uploadProfileImage();
+                            if (imagePath != null) {
+                              await _updateProfileField(
+                                  'profile_image_path', imagePath);
+                            }
                           }
                           await _notifPreferencesService
                               .setNotificationPreference(_notificationsEnabled);
@@ -286,3 +303,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
+

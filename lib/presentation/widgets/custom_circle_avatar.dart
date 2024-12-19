@@ -29,7 +29,7 @@ class CustomCircleAvatar extends StatelessWidget {
       ),
       child: CircleAvatar(
         radius: avatarRadius,
-        backgroundImage: AssetImage(imageUrl!) as ImageProvider,
+        backgroundImage: NetworkImage(imageUrl!),
       ),
     );
   }

@@ -9,6 +9,7 @@ import 'package:hedieaty_flutter_application/presentation/widgets/details_input_
 import '../../data/models/gift_model.dart';
 import '../../data/repositories/gift_repository.dart';
 import '../../data/services/gift_service.dart';
+import '../../data/services/img_storage_service.dart';
 import '../../domain/enums/GiftCategory.dart';
 import '../../domain/enums/GiftStatus.dart';
 import '../components/custom_dropdown_list.dart';
@@ -33,7 +34,7 @@ class _AddGiftScreenState extends State<AddGiftScreen> {
   late TextEditingController priceController;
   GiftCategory? category;
   GiftStatus? giftStatus;
-  File? selectedImage;
+  String? selectedImage;
 
   @override
   void initState() {
@@ -62,12 +63,34 @@ class _AddGiftScreenState extends State<AddGiftScreen> {
   Future<void> publishGift() async {
     try {
       if (_addGiftFormKey.currentState!.validate()) {
+        String? imageUrl;
+        if (selectedImage != null) {
+          imageUrl = await uploadToImgBB(File(selectedImage!));
+          if (imageUrl == null) {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text('Error'),
+                content: Text('Failed to upload the image. Please try again.'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text('OK'),
+                  ),
+                ],
+              ),
+            );
+            return;
+          }
+        } else {
+          imageUrl = widget.gift?.giftImagePath ??
+              'https://i.ibb.co/QFnzXZH/gift-default-img.png';
+        }
+
         final newGift = Gift(
           id: widget.gift?.id ?? generateUniqueId(),
           name: nameController.text,
-          giftImagePath: selectedImage?.path ??
-              widget.gift?.giftImagePath ??
-              'assets/images/gift_default_img.png',
+          giftImagePath: imageUrl,
           description: descriptionController.text,
           category: category?.index ?? 0,
           price: double.parse(priceController.text),
@@ -110,7 +133,6 @@ class _AddGiftScreenState extends State<AddGiftScreen> {
         );
       }
     } catch (e) {
-      // Handle errors
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -130,12 +152,35 @@ class _AddGiftScreenState extends State<AddGiftScreen> {
   Future<void> saveGift() async {
     try {
       if (_addGiftFormKey.currentState!.validate()) {
+        String? imageUrl;
+
+        if (selectedImage != null) {
+          imageUrl = await uploadToImgBB(File(selectedImage!));
+          if (imageUrl == null) {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text('Error'),
+                content: Text('Failed to upload the image. Please try again.'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text('OK'),
+                  ),
+                ],
+              ),
+            );
+            return;
+          }
+        } else {
+          imageUrl = widget.gift?.giftImagePath ??
+              'https://i.ibb.co/QFnzXZH/gift-default-img.png';
+        }
+
         final newGift = Gift(
           id: widget.gift?.id ?? generateUniqueId(),
           name: nameController.text,
-          giftImagePath: selectedImage?.path ??
-              widget.gift?.giftImagePath ??
-              'assets/images/gift_default_img.png',
+          giftImagePath: imageUrl,
           description: descriptionController.text,
           category: category?.index ?? 0,
           price: double.parse(priceController.text),

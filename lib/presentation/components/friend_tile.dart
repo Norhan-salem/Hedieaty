@@ -31,7 +31,7 @@ class FriendTile extends StatelessWidget {
           ),
           leading: CircleAvatar(
             radius: screenWidth * 0.06,
-            backgroundImage: AssetImage(friend.profileImagePath),
+            backgroundImage: NetworkImage(friend.profileImagePath),
           ),
           title: Text(
             friend.username,
@@ -109,7 +109,8 @@ class FriendTile extends StatelessWidget {
               builder: (context) => Center(child: CircularProgressIndicator()),
             );
             try {
-              final friendEvents = await EventRepository().fetchUserEvents(friend.id);
+              final friendEvents =
+                  await EventRepository().fetchUserEvents(friend.id);
               Navigator.pop(context);
               Navigator.push(
                 context,
@@ -137,7 +138,6 @@ class FriendTile extends StatelessWidget {
               );
             }
           },
-
         ),
       ),
     );
@@ -161,5 +161,3 @@ class FriendTile extends StatelessWidget {
     );
   }
 }
-
-

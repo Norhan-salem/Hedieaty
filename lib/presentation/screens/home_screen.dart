@@ -68,15 +68,14 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             }
           },
-            child: CircleAvatar(
-              radius: 40,
-              backgroundImage: _profileImgPath != null
-                  ? NetworkImage(_profileImgPath!)
-                  : AssetImage('assets/images/profile_mock.png')
-                      as ImageProvider,
-            ),
+          child: CircleAvatar(
+            radius: 40,
+            backgroundImage: _profileImgPath != null
+                ? NetworkImage(_profileImgPath!)
+                : NetworkImage('https://i.ibb.co/WfJVvF6/profile-mock.png'),
           ),
         ),
+      ),
       body: Stack(
         children: [
           BackgroundContainer(
