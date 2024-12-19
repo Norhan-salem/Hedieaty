@@ -110,7 +110,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
     return Scaffold(
       appBar: CustomAppBar(
-        title: widget.event == null ? 'Add Event' : 'Edit Event',
+        title: widget.event == null ? 'Add New Event' : 'Edit Event',
       ),
       body: Stack(
         children: [
@@ -154,6 +154,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       DateSelector(selectedDateNotifier: selectedDateNotifier),
                       SizedBox(height: screenHeight * 0.02),
                       CreateEventButton(
+                        key: Key('Add Event'),
                         onPressed: saveEvent,
                         buttonText:
                             widget.event == null ? 'Add Event' : 'Save Changes',

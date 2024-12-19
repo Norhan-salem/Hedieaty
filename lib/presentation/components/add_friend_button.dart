@@ -32,6 +32,7 @@ class AddFriendButton extends StatelessWidget {
         ],
       ),
       child: FloatingActionButton(
+        heroTag: 'add friend',
         onPressed: () {
           _showAddFriendOptions(context);
         },

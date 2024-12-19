@@ -70,6 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
             }
           },
           child: CircleAvatar(
+            key: Key('ProfileIcon'),
             radius: screenWidth > screenHeight
                 ? 50
                 : 40,
