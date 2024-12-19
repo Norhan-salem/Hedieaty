@@ -13,7 +13,7 @@ class User {
     required this.email,
     required this.password,
     required this.phoneNumber,
-    this.profileImagePath = 'assets/images/profile_mock.png',
+    this.profileImagePath = 'https://i.ibb.co/WfJVvF6/profile-mock.png',
     this.isDeleted = false
   });
 
