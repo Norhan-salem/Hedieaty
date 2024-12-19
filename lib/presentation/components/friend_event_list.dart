@@ -25,7 +25,7 @@ class FriendEventList extends StatelessWidget {
               ),
             ),
           )
-        ).slide(begin: Offset(0, 5), end: Offset.zero, duration: 400.ms);
+        ).slide(begin: Offset(0, 6), end: Offset.zero, duration: 400.ms);
       },
     );
   }

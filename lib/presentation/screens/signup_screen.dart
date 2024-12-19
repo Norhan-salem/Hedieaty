@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/registration_button.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/title_label.dart';
@@ -102,94 +103,96 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
           SingleChildScrollView(
             padding: EdgeInsets.all(padding),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(height: screenHeight * 0.2),
-                TitleLabel(text: 'Get on Board!'),
-                SizedBox(height: 20),
-                InputTextField(
-                  label: 'Name',
-                  controller: _nameController,
-                  leadingIcon: Icons.person_2_outlined,
-                  errorText: _registrationState.nameError,
-                  onChanged: (value) => _registrationState.updateName(value),
-                ),
-                SizedBox(height: 16),
-                InputTextField(
-                  label: 'Email',
-                  controller: _emailController,
-                  leadingIcon: Icons.email_outlined,
-                  errorText: _registrationState.emailError,
-                  onChanged: (value) => _registrationState.updateEmail(value),
-                ),
-                SizedBox(height: 16),
-                InputTextField(
-                  label: 'Phone Number',
-                  controller: _phoneNumberController,
-                  leadingIcon: Icons.call_outlined,
-                  errorText: _registrationState.phoneNumberError,
-                  onChanged: (value) =>
-                      _registrationState.updatePhoneNumber(value),
-                ),
-                SizedBox(height: 16),
-                InputTextField(
-                  label: 'Password',
-                  controller: _passwordController,
-                  isPassword: true,
-                  obscureText: _passwordVisibilityController.obscureText,
-                  togglePasswordView: () {
-                    _passwordVisibilityController.toggleVisibility(() {
-                      setState(() {
-                        _passwordVisibilityController.obscureText =
-                            !_passwordVisibilityController.obscureText;
-                      });
-                    });
-                  },
-                  leadingIcon: Icons.lock_outline,
-                  errorText: _registrationState.passwordError,
-                  onChanged: (value) =>
-                      _registrationState.updatePassword(value),
-                ),
-                SizedBox(height: 16),
-                InputTextField(
-                  label: 'Confirm Password',
-                  controller: _confirmPasswordController,
-                  isPassword: true,
-                  obscureText: _confirmPasswordVisibilityController.obscureText,
-                  togglePasswordView: () {
-                    _confirmPasswordVisibilityController.toggleVisibility(() {
-                      setState(() {
-                        _confirmPasswordVisibilityController.obscureText =
-                            !_confirmPasswordVisibilityController.obscureText;
-                      });
-                    });
-                  },
-                  leadingIcon: Icons.lock_outlined,
-                  errorText: _registrationState.confirmPasswordError,
-                  onChanged: (value) =>
-                      _registrationState.updateConfirmPassword(value),
-                ),
-                SizedBox(height: 32),
-                RegistrationButton(
-                  buttonText: 'Sign Up',
-                  onPressed: _registerUser,
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()),
-                    );
-                  },
-                  child: Text(
-                    'Already have an account? Log In',
-                    style: TextStyle(
-                        color: ColorPalette.darkCyan, fontFamily: 'Poppins'),
+            child: Animate(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: screenHeight * 0.2),
+                  TitleLabel(text: 'Get on Board!'),
+                  SizedBox(height: 20),
+                  InputTextField(
+                    label: 'Name',
+                    controller: _nameController,
+                    leadingIcon: Icons.person_2_outlined,
+                    errorText: _registrationState.nameError,
+                    onChanged: (value) => _registrationState.updateName(value),
                   ),
-                ),
-              ],
-            ),
+                  SizedBox(height: 16),
+                  InputTextField(
+                    label: 'Email',
+                    controller: _emailController,
+                    leadingIcon: Icons.email_outlined,
+                    errorText: _registrationState.emailError,
+                    onChanged: (value) => _registrationState.updateEmail(value),
+                  ),
+                  SizedBox(height: 16),
+                  InputTextField(
+                    label: 'Phone Number',
+                    controller: _phoneNumberController,
+                    leadingIcon: Icons.call_outlined,
+                    errorText: _registrationState.phoneNumberError,
+                    onChanged: (value) =>
+                        _registrationState.updatePhoneNumber(value),
+                  ),
+                  SizedBox(height: 16),
+                  InputTextField(
+                    label: 'Password',
+                    controller: _passwordController,
+                    isPassword: true,
+                    obscureText: _passwordVisibilityController.obscureText,
+                    togglePasswordView: () {
+                      _passwordVisibilityController.toggleVisibility(() {
+                        setState(() {
+                          _passwordVisibilityController.obscureText =
+                              !_passwordVisibilityController.obscureText;
+                        });
+                      });
+                    },
+                    leadingIcon: Icons.lock_outline,
+                    errorText: _registrationState.passwordError,
+                    onChanged: (value) =>
+                        _registrationState.updatePassword(value),
+                  ),
+                  SizedBox(height: 16),
+                  InputTextField(
+                    label: 'Confirm Password',
+                    controller: _confirmPasswordController,
+                    isPassword: true,
+                    obscureText: _confirmPasswordVisibilityController.obscureText,
+                    togglePasswordView: () {
+                      _confirmPasswordVisibilityController.toggleVisibility(() {
+                        setState(() {
+                          _confirmPasswordVisibilityController.obscureText =
+                              !_confirmPasswordVisibilityController.obscureText;
+                        });
+                      });
+                    },
+                    leadingIcon: Icons.lock_outlined,
+                    errorText: _registrationState.confirmPasswordError,
+                    onChanged: (value) =>
+                        _registrationState.updateConfirmPassword(value),
+                  ),
+                  SizedBox(height: 32),
+                  RegistrationButton(
+                    buttonText: 'Sign Up',
+                    onPressed: _registerUser,
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginScreen()),
+                      );
+                    },
+                    child: Text(
+                      'Already have an account? Log In',
+                      style: TextStyle(
+                          color: ColorPalette.darkCyan, fontFamily: 'Poppins'),
+                    ),
+                  ),
+                ],
+              ),
+            ).slide(begin: Offset(-1, 0), end: Offset.zero, duration: 400.ms),
           ),
         ],
       ),

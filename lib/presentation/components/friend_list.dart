@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hedieaty_flutter_application/data/repositories/user_repository.dart';
+
 import '../../data/models/user_model.dart';
 import '../../data/repositories/friend_repository.dart';
 import 'friend_tile.dart';
@@ -51,7 +53,11 @@ class FriendList extends StatelessWidget {
                   itemCount: friends.length,
                   itemBuilder: (context, index) {
                     print("Building FriendTile for friend at index: $index");
-                    return FriendTile(friend: friends[index]);
+                    return Animate(child: FriendTile(friend: friends[index]))
+                        .slide(
+                            begin: Offset(0, 5),
+                            end: Offset.zero,
+                            duration: 400.ms);
                   },
                 );
               } else {
@@ -68,4 +74,3 @@ class FriendList extends StatelessWidget {
     );
   }
 }
-

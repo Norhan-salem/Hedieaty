@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../core/constants/color_palette.dart';
 import '../screens/notif_screen.dart';
@@ -37,7 +38,7 @@ class NotificationButton extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) =>
-                  NotificationScreen(),
+                  Animate(child: NotificationScreen()).slide(begin: Offset(-1, 0), end: Offset.zero, duration: 400.ms),
             ),
           );
         },

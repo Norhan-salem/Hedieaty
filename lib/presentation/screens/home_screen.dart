@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hedieaty_flutter_application/data/repositories/user_repository.dart';
 import 'package:hedieaty_flutter_application/presentation/screens/profile_screen.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/background_image_container.dart';
@@ -112,12 +113,12 @@ class _HomeScreenState extends State<HomeScreen> {
           Positioned(
             bottom: 16,
             left: 16,
-            child: NotificationButton(),
+            child: Animate(child: NotificationButton()).slide(begin: Offset(1, 0), end: Offset.zero, duration: 400.ms),
           ),
           Positioned(
             bottom: 16,
             right: 16,
-            child: AddFriendButton(),
+            child: Animate(child: AddFriendButton()).slide(begin: Offset(-1, 0), end: Offset.zero, duration: 400.ms),
           ),
         ],
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hedieaty_flutter_application/presentation/screens/signup_screen.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/registration_button.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/title_label.dart';
@@ -73,56 +74,58 @@ class _LoginScreenState extends State<LoginScreen> {
                   constraints: BoxConstraints(
                     maxWidth: 600,
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(height: 200),
-                      TitleLabel(text: 'Welcome Back,'),
-                      SizedBox(height: 20),
-                      InputTextField(
-                        label: 'Email',
-                        controller: _emailController,
-                        leadingIcon: Icons.email_outlined,
-                      ),
-                      SizedBox(height: 16),
-                      InputTextField(
-                        label: 'Password',
-                        controller: _passwordController,
-                        isPassword: true,
-                        obscureText: _passwordVisibilityController.obscureText,
-                        togglePasswordView: () {
-                          _passwordVisibilityController.toggleVisibility(() {
-                            setState(() {
-                              _passwordVisibilityController.obscureText =
-                              !_passwordVisibilityController.obscureText;
+                  child: Animate(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 200),
+                        TitleLabel(text: 'Welcome Back,'),
+                        SizedBox(height: 20),
+                        InputTextField(
+                          label: 'Email',
+                          controller: _emailController,
+                          leadingIcon: Icons.email_outlined,
+                        ),
+                        SizedBox(height: 16),
+                        InputTextField(
+                          label: 'Password',
+                          controller: _passwordController,
+                          isPassword: true,
+                          obscureText: _passwordVisibilityController.obscureText,
+                          togglePasswordView: () {
+                            _passwordVisibilityController.toggleVisibility(() {
+                              setState(() {
+                                _passwordVisibilityController.obscureText =
+                                !_passwordVisibilityController.obscureText;
+                              });
                             });
-                          });
-                        },
-                        leadingIcon: Icons.lock_outline,
-                      ),
-                      SizedBox(height: 32),
-                      RegistrationButton(
-                        buttonText: 'Login',
-                        onPressed: _authenticateUser,
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SignUpScreen()),
-                          );
-                        },
-                        child: Text(
-                          'Not registered yet? Sign Up',
-                          style: TextStyle(
-                            color: ColorPalette.darkCyan,
-                            fontFamily: 'Poppins',
+                          },
+                          leadingIcon: Icons.lock_outline,
+                        ),
+                        SizedBox(height: 32),
+                        RegistrationButton(
+                          buttonText: 'Login',
+                          onPressed: _authenticateUser,
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SignUpScreen()),
+                            );
+                          },
+                          child: Text(
+                            'Not registered yet? Sign Up',
+                            style: TextStyle(
+                              color: ColorPalette.darkCyan,
+                              fontFamily: 'Poppins',
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                  ).slide(begin: Offset(-1, 0), end: Offset.zero, duration: 400.ms),
                 ),
               ),
             ),

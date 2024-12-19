@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hedieaty_flutter_application/data/repositories/gift_repository.dart';
 
 import '../../data/models/gift_model.dart';
@@ -50,24 +51,26 @@ class _GiftListState extends State<GiftList> {
       itemCount: widget.myGifts.length,
       itemBuilder: (context, index) {
         final gift = widget.myGifts[index];
-        return GiftTile(
-          gift: gift,
-          onEdit: () {
-            Navigator.push<Gift>(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AddGiftScreen(gift: gift, eventId: widget.eventId),
-              ),
-            ).then((updatedGift) {
-              if (updatedGift != null) {
-                _updateGift(index, updatedGift);
-              }
-            });
-          },
-          onDelete: () {
-            _deleteGift(index);
-          },
-        );
+        return Animate(
+          child: GiftTile(
+            gift: gift,
+            onEdit: () {
+              Navigator.push<Gift>(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddGiftScreen(gift: gift, eventId: widget.eventId),
+                ),
+              ).then((updatedGift) {
+                if (updatedGift != null) {
+                  _updateGift(index, updatedGift);
+                }
+              });
+            },
+            onDelete: () {
+              _deleteGift(index);
+            },
+          ),
+        ).slide(begin: Offset(0, 5), end: Offset.zero, duration: 400.ms);
       },
     );
   }
