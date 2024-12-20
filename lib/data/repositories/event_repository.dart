@@ -92,7 +92,6 @@ class EventRepository {
         final data = doc.data()!;
         return Event(
           id: int.parse(doc.id),
-          // Use Firestore document ID as integer
           name: data['name'],
           description: data['description'],
           category: data['category'],
@@ -100,7 +99,7 @@ class EventRepository {
           date: data['date'] != null
               ? (data['date'] as Timestamp)
                   .toDate()
-                  .toString() // Convert Timestamp to String
+                  .toString()
               : '',
           userId: data['user_id'],
         );

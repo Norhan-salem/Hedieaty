@@ -8,19 +8,49 @@ import '../widgets/create_event_button.dart';
 import '../widgets/custom_app_bar.dart';
 import 'add_edit_gift_screen.dart';
 
-class GiftsListScreen extends StatelessWidget {
+class GiftsListScreen extends StatefulWidget {
   final int eventId;
   final List<Gift> gifts;
 
   GiftsListScreen({Key? key, required this.gifts, required this.eventId}) : super(key: key);
 
   @override
+  _GiftsListScreenState createState() => _GiftsListScreenState();
+}
+
+class _GiftsListScreenState extends State<GiftsListScreen> {
+  late List<Gift> gifts;
+
+  @override
+  void initState() {
+    super.initState();
+    gifts = widget.gifts;
+  }
+
+  void _addOrUpdateGift(Gift newGift) {
+    setState(() {
+      gifts = List.from(gifts)
+        ..removeWhere((gift) => gift.id == newGift.id)
+        ..add(newGift);
+    });
+  }
+
+  Future<void> _navigateToAddGiftScreen() async {
+    final newGift = await Navigator.push<Gift>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddGiftScreen(eventId: widget.eventId),
+      ),
+    );
+
+    if (newGift != null) {
+      _addOrUpdateGift(newGift);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     ValueNotifier<List<Gift>> sortedMyGiftsNotifier = ValueNotifier<List<Gift>>(gifts);
-
-    void _addGift(Gift newGift) {
-      sortedMyGiftsNotifier.value = List.from(sortedMyGiftsNotifier.value)..add(newGift);
-    }
 
     double appBarPadding = MediaQuery.of(context).size.height * 0.02;
 
@@ -41,18 +71,7 @@ class GiftsListScreen extends StatelessWidget {
               SizedBox(height: appBarPadding),
               CreateEventButton(
                 buttonText: 'Add New Gift',
-                onPressed: () {
-                  Navigator.push<Gift>(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AddGiftScreen(eventId: eventId),
-                    ),
-                  ).then((newGift) {
-                    if (newGift != null) {
-                      _addGift(newGift);
-                    }
-                  });
-                },
+                onPressed: _navigateToAddGiftScreen,
               ),
               SizedBox(height: appBarPadding),
               Expanded(
@@ -60,9 +79,9 @@ class GiftsListScreen extends StatelessWidget {
                   valueListenable: sortedMyGiftsNotifier,
                   builder: (context, sortedMyGifts, child) {
                     return GiftList(
-                      eventId: eventId,
+                      eventId: widget.eventId,
                       myGifts: sortedMyGifts,
-                      onGiftAdded: _addGift,
+                      onGiftAdded: _addOrUpdateGift,
                     );
                   },
                 ),
@@ -74,3 +93,4 @@ class GiftsListScreen extends StatelessWidget {
     );
   }
 }
+

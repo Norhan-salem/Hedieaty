@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hedieaty_flutter_application/domain/enums/GiftStatus.dart';
 
 import '../../domain/enums/GiftCategory.dart';
@@ -58,6 +59,25 @@ class Gift {
       'isDeleted': isDeleted ? true : false,
       'isPublished': isPublished ? true : false
     };
+  }
+
+  factory Gift.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return Gift(
+      id: data['id'],
+      name: data['name'] ?? '',
+      status: data['status'] ?? '',
+      pledged_by_user_id: data['pledged_by_user_id'] ?? '',
+      giftImagePath: data['gift_image_path'],
+      description: data['description'],
+      category: data['category'],
+      eventId: data['event_id'],
+      isDeleted: data['isDeleted'],
+      isPublished: data['isPublished'],
+      price: data['price'],
+
+
+    );
   }
 
   GiftCategory get giftCategory => GiftCategory.values[category];

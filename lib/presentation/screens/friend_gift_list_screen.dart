@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/utils/sorting_menu_utils.dart';
@@ -13,8 +14,17 @@ class FriendGiftsListScreen extends StatelessWidget {
 
   FriendGiftsListScreen({Key? key, required this.event}) : super(key: key);
 
-  Future<List<Gift>> _fetchGifts(int eventId) async {
-    return await GiftRepository().fetchGiftsByEventId(eventId);
+  Stream<List<Gift>> _listenToGifts(int eventId) {
+    return FirebaseFirestore.instance
+        .collection('events')
+        .doc(eventId.toString())
+        .collection('gifts')
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs
+          .map((doc) => Gift.fromFirestore(doc))
+          .toList();
+    });
   }
 
   @override
@@ -38,8 +48,8 @@ class FriendGiftsListScreen extends StatelessWidget {
             children: [
               SizedBox(height: appBarPadding),
               Expanded(
-                child: FutureBuilder<List<Gift>>(
-                  future: _fetchGifts(event.id),
+                child: StreamBuilder<List<Gift>>(
+                  stream: _listenToGifts(event.id),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());

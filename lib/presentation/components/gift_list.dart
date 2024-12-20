@@ -45,6 +45,13 @@ class _GiftListState extends State<GiftList> {
     });
   }
 
+  void _addNewGift(Gift gift) {
+    setState(() {
+      widget.myGifts.add(gift);
+    });
+    widget.onGiftAdded(gift);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -75,3 +82,4 @@ class _GiftListState extends State<GiftList> {
     );
   }
 }
+
