@@ -82,15 +82,18 @@ class _EventListState extends State<EventList> {
             },
             onTap: () async {
               try {
-                final gifts =
-                await GiftRepository().fetchLocalGiftsByEventId(event.id);
+                final gifts = await GiftRepository().fetchLocalGiftsByEventId(event.id);
                 print('Fetched ${gifts.length} gifts');
+                if (gifts.isEmpty) {
+                  print('No gifts found for this event.');
+                }
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => GiftsListScreen(
                       eventId: event.id,
-                      gifts: gifts,
+                      gifts: gifts.isNotEmpty ? gifts : [],
                     ),
                   ),
                 );

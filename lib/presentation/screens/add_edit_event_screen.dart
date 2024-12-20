@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty_flutter_application/data/repositories/user_repository.dart';
 import 'package:hedieaty_flutter_application/presentation/widgets/background_image_container.dart';
@@ -64,13 +65,13 @@ class _AddEventScreenState extends State<AddEventScreen> {
           name: nameController.text.trim(),
           description: descriptionController.text.trim(),
           location: locationController.text.trim(),
-          date: (selectedDateNotifier.value ??
-                  DateTime.now().add(Duration(days: 1)))
+          date: (selectedDateNotifier.value ?? DateTime.now().add(Duration(days: 1)))
               .toIso8601String(),
           category: category?.index ?? 0,
           userId: currentUser.id,
           isDeleted: widget.event?.isDeleted ?? false,
         );
+
         if (widget.event == null) {
           await EventRepository().createEvent(newEvent);
         } else {
@@ -78,11 +79,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
             'name': newEvent.name,
             'description': newEvent.description,
             'location': newEvent.location,
-            'date': newEvent.date,
+            'date': Timestamp.fromDate(DateTime.parse(newEvent.date)),
             'category': newEvent.category,
           };
           await EventRepository().updateEvent(newEvent.id, updateFields);
         }
+
         Navigator.pop(context, newEvent);
       } catch (e) {
         showDialog(
@@ -101,6 +103,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
       }
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
